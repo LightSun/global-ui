@@ -35,7 +35,18 @@ public class SDL {
     public static Context getContext() {
         return mContext;
     }
-
+    public static String[] getLibraries(){
+        return new String[]{
+                "hidapi",
+                "SDL2",
+                // "SDL2_image",
+                // "SDL2_mixer",
+                // "SDL2_net",
+                // "SDL2_ttf",
+                //"main"
+                "agg"
+        };
+    }
     public static void loadLibrary(String libraryName) throws UnsatisfiedLinkError, SecurityException, NullPointerException {
 
         if (libraryName == null) {

@@ -53,6 +53,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.heaven7.globalui.util.JNIBridge;
+
 import java.util.Hashtable;
 import java.util.Locale;
 
@@ -136,7 +138,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
      */
     protected String getMainSharedObject() {
         String library;
-        String[] libraries = SDLActivity.mSingleton.getLibraries();
+        String[] libraries = SDL.getLibraries();
         if (libraries.length > 0) {
             library = "lib" + libraries[libraries.length - 1] + ".so";
         } else {
@@ -161,7 +163,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
      * Also keep in mind that the order the libraries are loaded may matter.
      * @return names of shared libraries to be loaded (e.g. "SDL2", "main").
      */
-    protected String[] getLibraries() {
+ /*   protected String[] getLibraries() {
         return new String[] {
             "hidapi",
             "SDL2",
@@ -170,14 +172,15 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
             // "SDL2_net",
             // "SDL2_ttf",
             //"main"
+             "agg"
         };
     }
-
+*/
     // Load the .so
-    public void loadLibraries() {
-       for (String lib : getLibraries()) {
+    public void loadLibraries() { //moved to JNIBridge
+      /* for (String lib : getLibraries()) {
           SDL.loadLibrary(lib);
-       }
+       }*/
     }
 
     /**
@@ -258,6 +261,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
 
            return;
         }
+        //JNIBridge.init(this);
 
         // Set up JNI
         SDL.setupJNI();

@@ -29,37 +29,8 @@
 #include "SDL_surface.h"
 #include "SDL_endian.h"
 
+#include "agg_platform_support.h"
 
-#if __ANDROID__
-extern "C"
-{
-extern int Android_ScreenWidth;
-extern int Android_ScreenHeight;
-}
-
-#ifdef NATIVE_LOG
-#define LOG_TAG "NATIVE.LOG"
-
-#include <android/log.h>
-
-#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
-#define LOGI(...) __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
-#define LOGW(...) __android_log_print(ANDROID_LOG_WARN,LOG_TAG,__VA_ARGS__)
-#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
-#define LOGF(...) __android_log_print(ANDROID_LOG_FATAL,LOG_TAG,__VA_ARGS__)
-#else
-#define LOGD(...) do{}while(0)
-#define LOGI(...) do{}while(0)
-#define LOGW(...) do{}while(0)
-#define LOGE(...) do{}while(0)
-#define LOGF(...) do{}while(0)
-#endif
-#define DEBUG_PRINT(...) LOGD(__VA_ARGS__)
-#define ERROR_PRINT(...) LOGE(__VA_ARGS__)
-#else //!__ANDROID__
-#define DEBUG_PRINT(...) do{fprintf(stderr, __VA_ARGS__ ); } while (false)
-#define ERROR_PRINT(...) do{fprintf(stderr, __VA_ARGS__ ); } while (false)
-#endif
 
 namespace agg {
 
@@ -486,7 +457,7 @@ namespace agg {
                                 //event.mgesture.numFingers);
                         break;
                     case 769:
-                        //DEBUG_PRINT("769: call init");
+                        DEBUG_PRINT("769: call init");
                         if (!init(300, 400, m_window_flags)) {
                             DEBUG_PRINT("init failed");
                             return false;
@@ -521,8 +492,9 @@ namespace agg {
             if (len < 4 || strcmp(fn + len - 4, ".bmp") != 0) {
                 strcat(fn, ".bmp");
             }
-
-            SDL_Surface *tmp_surf = SDL_LoadBMP(fn);
+            SDL_Surface *tmp_surf;
+            sdl2_do_file(fn, tmp_surf = SDL_LoadBMP(_out), );
+            //SDL_Surface *tmp_surf = SDL_LoadBMP(fn);
             if (tmp_surf == 0) {
                 ERROR_PRINT("Couldn't load %s: %s\n", fn, SDL_GetError());
                 return false;
@@ -569,7 +541,10 @@ namespace agg {
             if (len < 4 || strcmp(fn + len - 4, ".bmp") != 0) {
                 strcat(fn, ".bmp");
             }
-            return SDL_SaveBMP(m_specific->m_surf_img[idx], fn) == 0;
+            bool result;
+            sdl2_do_file(fn,
+                     result = SDL_SaveBMP(m_specific->m_surf_img[idx], _out) == 0,
+                     return result)
         }
         return false;
     }

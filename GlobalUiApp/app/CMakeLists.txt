@@ -30,6 +30,8 @@ add_library(
         agg
         SHARED
         ${SRC_AGG}
+        src/main/cpp/core/JNIBridge.cpp
+        ${DIR_AGG}/examples/agg2d_demo.cpp
 )
 
 set_target_properties(agg PROPERTIES LINKER_LANGUAGE CXX)
