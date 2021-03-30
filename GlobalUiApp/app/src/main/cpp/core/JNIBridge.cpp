@@ -5,19 +5,15 @@
 #include "stdlib.h"
 #include <cstring>
 #include "jni.h"
+#include "JNIBridge.h"
 #include "../agg-src/src/platform/sdl2/agg_platform_support.h"
 
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_heaven7_globalui_util_JNIBridge_nInit(JNIEnv *env, jclass cls, jstring str,jint w, jint h){
-    Android_ScreenWidth = w;
-    Android_ScreenHeight = h;
     const char *cstr = env->GetStringUTFChars(str, NULL);
-
-    _assetDir = static_cast<char *>(malloc(strlen(cstr)+ 1));
-    strcpy(_assetDir, cstr);
+    sdl2_setup(cstr, w, h);
     env->ReleaseStringUTFChars(str, cstr);
-    LOGD("_assetDir = %s", _assetDir);
 }
 
 extern "C"

@@ -6,6 +6,15 @@
 #include <string.h>
 #include "agg_platform_support.h"
 
+void sdl2_setup(const char* assertPath, int w, int h){
+    ScreenWidth = static_cast<unsigned int>(w);
+    ScreenHeight = static_cast<unsigned int>(h);
+
+    _assetDir = static_cast<char *>(malloc(strlen(assertPath)+ 1));
+    strcpy(_assetDir, assertPath);
+    LOGD("sdl_jnibridge_setup: _assetDir = %s, w= %d, h = %d", _assetDir, w, h);
+}
+
 extern "C" bool getFilePath(const char* p, char** out){
     LOGD("getFilePath: _assetDir = %s", _assetDir);
     if(_assetDir){

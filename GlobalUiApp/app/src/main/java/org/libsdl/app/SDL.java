@@ -1,9 +1,18 @@
 package org.libsdl.app;
 
 import android.content.Context;
+import android.view.Display;
+import android.view.Surface;
+import android.view.WindowManager;
 
 import java.lang.Class;
 import java.lang.reflect.Method;
+
+import static org.libsdl.app.SDLActivity.SDL_ORIENTATION_LANDSCAPE;
+import static org.libsdl.app.SDLActivity.SDL_ORIENTATION_LANDSCAPE_FLIPPED;
+import static org.libsdl.app.SDLActivity.SDL_ORIENTATION_PORTRAIT;
+import static org.libsdl.app.SDLActivity.SDL_ORIENTATION_PORTRAIT_FLIPPED;
+import static org.libsdl.app.SDLActivity.SDL_ORIENTATION_UNKNOWN;
 
 /**
     SDL library initialization
@@ -47,6 +56,32 @@ public class SDL {
                 "agg"
         };
     }
+    public static int getCurrentOrientation(Context context) {
+        final Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+
+        int result = SDL_ORIENTATION_UNKNOWN;
+
+        switch (display.getRotation()) {
+            case Surface.ROTATION_0:
+                result = SDL_ORIENTATION_PORTRAIT;
+                break;
+
+            case Surface.ROTATION_90:
+                result = SDL_ORIENTATION_LANDSCAPE;
+                break;
+
+            case Surface.ROTATION_180:
+                result = SDL_ORIENTATION_PORTRAIT_FLIPPED;
+                break;
+
+            case Surface.ROTATION_270:
+                result = SDL_ORIENTATION_LANDSCAPE_FLIPPED;
+                break;
+        }
+
+        return result;
+    }
+
     public static void loadLibrary(String libraryName) throws UnsatisfiedLinkError, SecurityException, NullPointerException {
 
         if (libraryName == null) {

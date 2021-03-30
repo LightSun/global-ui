@@ -6,15 +6,9 @@
 #define GLOBALUIAPP_AGG_PLATFORM_SUPPORT_H
 
 #include <stdlib.h>
+#include "agg_extra.h"
 
 #if __ANDROID__
-extern "C"
-{
-static int Android_ScreenWidth;
-static int Android_ScreenHeight;
-static char* _assetDir = NULL;
-}
-
 #ifdef NATIVE_LOG
 #define LOG_TAG "NATIVE_LOG"
 
@@ -38,8 +32,6 @@ static char* _assetDir = NULL;
 #define DEBUG_PRINT(...) do{fprintf(stderr, __VA_ARGS__ ); } while (false)
 #define ERROR_PRINT(...) do{fprintf(stderr, __VA_ARGS__ ); } while (false)
 #endif
-
-extern "C" bool getFilePath(const char* p, char** out);
 
 #define sdl2_do_file(p, x, ends) \
 do{ \

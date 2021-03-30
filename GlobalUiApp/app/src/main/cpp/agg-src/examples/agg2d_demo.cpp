@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "platform/agg_platform_support.h"
 #include "agg2d.h"
+#include "../src/platform/sdl2/agg_extra.h"
+#include "../src/platform/sdl2/agg_platform_support.h"
 
 enum { flip_y = true };
 
@@ -70,7 +72,9 @@ public:
 
         // Reglar Text
 #ifdef AGG2D_USE_FREETYPE
-		m_graphics.font("c:/WINDOWS/fonts/timesi.ttf", 14.0, false, false);
+        sdl2_do_file("timesi.ttf", m_graphics.font(_out, 14.0, false, false),
+        )
+		//m_graphics.font("c:/WINDOWS/fonts/timesi.ttf", 14.0, false, false);
 #else
 		m_graphics.font("Times New Roman", 14.0, false, false);
 #endif
@@ -80,7 +84,9 @@ public:
 
         // Outlined Text
 #ifdef AGG2D_USE_FREETYPE
-        m_graphics.font("c:/WINDOWS/fonts/timesi.ttf", 50.0, false, false, Agg2D::VectorFontCache);
+        sdl2_do_file("timesi.ttf", m_graphics.font(_out, 50.0, false, false, Agg2D::VectorFontCache),
+        )
+       // m_graphics.font("c:/WINDOWS/fonts/timesi.ttf", 50.0, false, false, Agg2D::VectorFontCache);
 #else
         m_graphics.font("Times New Roman", 50.0, false, false, Agg2D::VectorFontCache);
 #endif
@@ -114,7 +120,9 @@ public:
         m_graphics.noLine();
         //m_graphics.textHints(false);
 #ifdef AGG2D_USE_FREETYPE
-		m_graphics.font("c:/WINDOWS/fonts/timesi.ttf", 40.0, false, false, Agg2D::VectorFontCache);
+        sdl2_do_file("timesi.ttf", m_graphics.font(_out, 40.0, false, false, Agg2D::VectorFontCache),
+        )
+		//m_graphics.font("c:/WINDOWS/fonts/timesi.ttf", 40.0, false, false, Agg2D::VectorFontCache);
 #else
         m_graphics.font("Times New Roman", 40.0, false, false, Agg2D::VectorFontCache);
 #endif
@@ -150,7 +158,9 @@ public:
         // Gradients (Aqua Buttons)
         //=======================================
 #ifdef AGG2D_USE_FREETYPE
-        m_graphics.font("c:/WINDOWS/fonts/verdanab.ttf", 20.0, false, false, Agg2D::VectorFontCache);
+        sdl2_do_file("verdanab.ttf", m_graphics.font(_out, 20.0, false, false, Agg2D::VectorFontCache),
+        )
+       // m_graphics.font("c:/WINDOWS/fonts/verdanab.ttf", 20.0, false, false, Agg2D::VectorFontCache);
 #else
         m_graphics.font("Verdana", 20.0, false, false, Agg2D::VectorFontCache);
 #endif
@@ -372,12 +382,11 @@ public:
 
 };
 
+/*#ifdef ANDROID
+#include "../../core/JNIBridge.h"
+#endif*/
 
-
-
-
-
-int agg_main(int argc, char* argv[])
+int agg_main(int argc, char* argv[]) //argv[0] is "app-process" ,final is null
 {
 #ifdef AGG2D_USE_FLOAT_FORMAT
     the_application app(agg::pix_format_bgra128, flip_y);
@@ -388,7 +397,11 @@ int agg_main(int argc, char* argv[])
 
     char buf[256];
     const char* img_name = "spheres";
-    if(argc >= 2) img_name = argv[1];
+if(argc >= 4){
+    sdl2_setup(argv[1], atoi(argv[2]), atoi(argv[3]));
+}
+
+    //if(argc >= 2) img_name = argv[1];
     if(!app.load_img(0, img_name))
     {
         if(strcmp(img_name, "spheres") == 0)
@@ -405,7 +418,8 @@ int agg_main(int argc, char* argv[])
         return 1;
     }
 
-    if(app.init(600, 600, agg::window_resize))
+    //if(app.init(600, 600, agg::window_resize))
+    if(app.init(ScreenWidth, ScreenHeight, agg::window_resize))
     {
         return app.run();
     }

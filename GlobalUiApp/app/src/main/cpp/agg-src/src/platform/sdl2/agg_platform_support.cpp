@@ -209,8 +209,8 @@ namespace agg {
         m_specific->m_surface = 0;
 
 #ifdef __ANDROID__
-        width = (unsigned int) Android_ScreenWidth;
-        height = (unsigned int) Android_ScreenHeight;
+       // width = (unsigned int) ScreenWidth;
+      //  height = (unsigned int) ScreenHeight;
         unsigned int wflags = SDL_WINDOW_FULLSCREEN;
 #else
         unsigned int wflags = 0;

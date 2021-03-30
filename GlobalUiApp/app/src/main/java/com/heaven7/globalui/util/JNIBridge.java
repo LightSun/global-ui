@@ -13,6 +13,7 @@ import java.io.File;
  */
 public final class JNIBridge {
     private static boolean sInit = false;
+    public static final String[] ARGS = new String[3];
     static {
         loadLibraries();
     }
@@ -21,8 +22,12 @@ public final class JNIBridge {
         if(!sInit){
             sInit = true;
             final Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-            File f = context.getCacheDir();
-            nInit(f.getAbsolutePath(), display.getWidth(), display.getHeight());
+            File f = new File(context.getCacheDir(), "sdl2");
+            ARGS[0] = f.getAbsolutePath();
+            ARGS[1] = String.valueOf(display.getWidth());
+            ARGS[2] = String.valueOf(display.getHeight());
+            //cause sdl2 use dlopen. we can't save the data to static.
+           // nInit(f.getAbsolutePath(), display.getWidth(), display.getHeight());
         }
     }
     private static void loadLibraries() {
