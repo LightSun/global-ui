@@ -16,7 +16,7 @@ aux_source_directory(${DIR_AGG}/src SRC_AGG)
 aux_source_directory(${DIR_AGG}/src/ctrl SRC_AGG)
 aux_source_directory(${DIR_AGG}/src/platform/sdl2 SRC_AGG)
 aux_source_directory(${DIR_AGG}/agg2d SRC_AGG)
-aux_source_directory(${DIR_AGG}/font_freetype SRC_AGG)
+#aux_source_directory(${DIR_AGG}/font_freetype SRC_AGG)
 
 #freetype
 set(DIR_HALFBUZZ_FREETYPE src/main/cpp/harfbuzz-icu-freetype)
@@ -32,6 +32,7 @@ add_library(
         ${SRC_AGG}
         src/main/cpp/core/JNIBridge.cpp
         ${DIR_AGG}/examples/agg2d_demo.cpp
+        ${DIR_AGG}/font_freetype/agg_font_freetype.cpp
 )
 
 set_target_properties(agg PROPERTIES LINKER_LANGUAGE CXX)
