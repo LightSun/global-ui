@@ -65,7 +65,7 @@ public:
 
 
         // Rounded Rect
-        m_graphics.lineColor(0, 0, 0);
+        m_graphics.lineColor(255, 0, 0);
         m_graphics.noFill();
         m_graphics.roundedRect(0.5, 0.5, 600-0.5, 600-0.5, 20.0);
         
@@ -78,10 +78,11 @@ public:
 #else
 		m_graphics.font("Times New Roman", 14.0, false, false);
 #endif
-        m_graphics.fillColor(0, 0, 0);
+        m_graphics.fillColor(0, 255, 0);
         m_graphics.noLine();
         m_graphics.text(100, 20, "Regular Raster Text -- Fast, but can't be rotated");
 
+        /*
         // Outlined Text
 #ifdef AGG2D_USE_FREETYPE
         sdl2_do_file("timesi.ttf", m_graphics.font(_out, 50.0, false, false, Agg2D::VectorFontCache),
@@ -94,9 +95,10 @@ public:
         m_graphics.fillColor(180, 200, 100);
         m_graphics.lineWidth(1.0);
         m_graphics.text(100.5, 50.5, "Outlined Text");
+         */
 
         // Text Alignment
-        m_graphics.line(250.5-150, 150.5,    250.5+150, 150.5);
+    /*    m_graphics.line(250.5-150, 150.5,    250.5+150, 150.5);
         m_graphics.line(250.5,     150.5-20, 250.5,     150.5+20);
         m_graphics.line(250.5-150, 200.5,    250.5+150, 200.5);
         m_graphics.line(250.5,     200.5-20, 250.5,     200.5+20);
@@ -113,10 +115,10 @@ public:
         m_graphics.line(250.5-150, 500.5,    250.5+150, 500.5);
         m_graphics.line(250.5,     500.5-20, 250.5,     500.5+20);
         m_graphics.line(250.5-150, 550.5,    250.5+150, 550.5);
-        m_graphics.line(250.5,     550.5-20, 250.5,     550.5+20);
+        m_graphics.line(250.5,     550.5-20, 250.5,     550.5+20);*/
 
 
-        m_graphics.fillColor(100, 50, 50);
+   /*     m_graphics.fillColor(100, 50, 50);
         m_graphics.noLine();
         //m_graphics.textHints(false);
 #ifdef AGG2D_USE_FREETYPE
@@ -125,9 +127,9 @@ public:
 		//m_graphics.font("c:/WINDOWS/fonts/timesi.ttf", 40.0, false, false, Agg2D::VectorFontCache);
 #else
         m_graphics.font("Times New Roman", 40.0, false, false, Agg2D::VectorFontCache);
-#endif
+#endif*/
 
-        m_graphics.textAlignment(Agg2D::AlignLeft, Agg2D::AlignBottom);
+      /*  m_graphics.textAlignment(Agg2D::AlignLeft, Agg2D::AlignBottom);
         m_graphics.text(250.0,     150.0, "Left-Bottom", true, 0, 0);
 
         m_graphics.textAlignment(Agg2D::AlignCenter, Agg2D::AlignBottom);
@@ -152,9 +154,9 @@ public:
         m_graphics.text(250.0,     500.0, "Center-Top", true, 0, 0);
 
         m_graphics.textAlignment(Agg2D::AlignRight, Agg2D::AlignTop);
-        m_graphics.text(250.0,     550.0, "Right-Top", true, 0, 0);
+        m_graphics.text(250.0,     550.0, "Right-Top", true, 0, 0);*/
 
-
+/**
         // Gradients (Aqua Buttons)
         //=======================================
 #ifdef AGG2D_USE_FREETYPE
@@ -218,9 +220,9 @@ public:
                                       Agg2D::Color(0,  200,255,255));
         m_graphics.roundedRect(xb1+3, yb2-25, xb2-3, yb2-2, 1, 1, 9, 18);
 
+*/
 
-
-
+/**
         // Basic Shapes -- Ellipse
         //===========================================
         m_graphics.lineWidth(3.5);
@@ -276,7 +278,7 @@ public:
 
         // Image Transformations
         //===========================================
-        Agg2D::Image img(rbuf_img(0).buf(),
+      /*  Agg2D::Image img(rbuf_img(0).buf(),
                          rbuf_img(0).width(),
                          rbuf_img(0).height(),
                          rbuf_img(0).stride());
@@ -289,7 +291,7 @@ public:
         // Set the initial image blending operation as BlendDst, that actually
         // does nothing.
         //-----------------
-        m_graphics.imageBlendMode(Agg2D::BlendDst);
+        m_graphics.imageBlendMode(Agg2D::BlendDst);*/
 
 
         // Transform the whole image to the destination rectangle
@@ -323,12 +325,12 @@ public:
         // Transform image to the destination path.
         // The scale is determined by a rectangle
         //-----------------
-        m_graphics.resetPath();
+     /*   m_graphics.resetPath();
         m_graphics.moveTo(450, 200);
         m_graphics.cubicCurveTo(595, 220, 575, 350, 595, 350);
         m_graphics.lineTo(470, 340);
         m_graphics.transformImagePath(img, 60, 60, img.width()-60, img.height()-60,
-                                      450, 200, 595, 350);
+                                      450, 200, 595, 350);*/
 
         // Transform image to the destination path.
         // The transformation is determined by a parallelogram
@@ -350,7 +352,7 @@ public:
 
 
         // Add/Sub/Contrast Blending Modes
-        m_graphics.noLine();
+      /*  m_graphics.noLine();
         m_graphics.fillColor(70, 70, 0);
         m_graphics.blendMode(Agg2D::BlendAdd);
         m_graphics.ellipse(500, 280, 20, 40);
@@ -367,7 +369,7 @@ public:
                                       Agg2D::Color(255, 255, 0, 0),
                                       Agg2D::Color(0, 0, 127),
                                       Agg2D::Color(0, 255, 0, 0));
-        m_graphics.ellipse(400, 500, 40, 40);
+        m_graphics.ellipse(400, 500, 40, 40);*/
 
     }
 

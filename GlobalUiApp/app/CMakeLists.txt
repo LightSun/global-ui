@@ -30,6 +30,7 @@ add_library(
         agg
         SHARED
         ${SRC_AGG}
+        ${DIR_AGG}/font_freetype/agg_font_freetype.cpp
         src/main/cpp/core/JNIBridge.cpp
         ${DIR_AGG}/examples/agg2d_demo.cpp
         ${DIR_AGG}/font_freetype/agg_font_freetype.cpp

@@ -11,5 +11,16 @@
         android:textAllCaps="false"
         android:onClick="onClickStartApp"
         />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="tmp test"
+        android:textAllCaps="false"
+        android:onClick="onClickTmpTest"
+        />
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
