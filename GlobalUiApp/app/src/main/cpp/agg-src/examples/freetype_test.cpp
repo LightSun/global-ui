@@ -19,6 +19,8 @@
 #define AGG_BGR24
 //#define AGG_BGR96
 #include "pixel_formats.h"
+#include "../src/platform/sdl2/agg_extra.h"
+#include "../src/platform/sdl2/agg_platform_support.h"
 
 enum flip_y_e { flip_y = true };
 bool font_flip_y = !flip_y;
@@ -31,7 +33,7 @@ static char text[] =
 "so that all the components can be easily combined. Also, "
 "the template based design allows you to replace any part of "
 "the library without the necessity to modify a single byte in "
-"the existing code. "
+"the existing code. \n中国\n"
 "AGG is designed keeping in mind extensibility and flexibility. "
 "Basically I just wanted to create a toolkit that would allow me "
 "(and anyone else) to add new fancy algorithms very easily. "
@@ -276,7 +278,11 @@ public:
 
         m_contour.width(-m_weight.value() * m_height.value() * 0.05);
 
-        if(m_feng.load_font(full_file_name("timesi.ttf"), 0, gren))
+        bool result;
+        sdl2_do_file("NotoSans-Regular.ttf", result = m_feng.load_font(_out,  0, gren),
+        )
+        //if(m_feng.load_font(full_file_name("timesi.ttf"), 0, gren))
+        if(result)
         {
             m_feng.hinting(m_hinting.status());
             m_feng.height(m_height.value());
@@ -474,7 +480,11 @@ int agg_main(int argc, char* argv[])
     the_application app(pix_format, flip_y);
     app.caption("AGG Example. Rendering Fonts with FreeType");
 
-    if(app.init(640, 520, agg::window_resize))
+    if(argc >= 4){
+        sdl2_setup(argv[1], atoi(argv[2]), atoi(argv[3]));
+    }
+
+    if(app.init(ScreenWidth, ScreenHeight, agg::window_resize))
     {
         return app.run();
     }

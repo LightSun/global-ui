@@ -4,7 +4,7 @@ project(globalApp)
 set(LIB_DIR ${CMAKE_SOURCE_DIR}/src/main/jniLibs/${ANDROID_ABI})
 include_directories(src/main/cpp/include)
 include_directories(src/main/cpp/agg-src/include)
-#sdl2
+#sdl2 (2.0.14)
 add_library(sdl2 SHARED IMPORTED)
 set_target_properties(sdl2 PROPERTIES IMPORTED_LOCATION ${LIB_DIR}/libSDL2.so)
 
@@ -32,7 +32,8 @@ add_library(
         ${SRC_AGG}
         ${DIR_AGG}/font_freetype/agg_font_freetype.cpp
         src/main/cpp/core/JNIBridge.cpp
-        ${DIR_AGG}/examples/agg2d_demo.cpp
+       # ${DIR_AGG}/examples/agg2d_demo.cpp
+        ${DIR_AGG}/examples/freetype_test.cpp
         ${DIR_AGG}/font_freetype/agg_font_freetype.cpp
 )
 
