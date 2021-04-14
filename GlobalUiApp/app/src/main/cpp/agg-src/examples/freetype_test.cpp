@@ -178,11 +178,11 @@ class the_application : public agg::platform_support
     agg::cbox_ctrl<color_type>   m_hinting;
     agg::cbox_ctrl<color_type>   m_kerning;
     agg::cbox_ctrl<color_type>   m_performance;
-    font_engine_type             m_feng;
-    font_manager_type            m_fman;
+    font_engine_type             m_feng; //字体引擎
+    font_manager_type            m_fman; //字体管理
     double                       m_old_height;
 
-    // Pipeline to process the vectors glyph paths (curves + contour)
+    // Pipeline to process the vectors glyph paths (curves + contour) 曲线+轮廓
     agg::conv_curve<font_manager_type::path_adaptor_type> m_curves;
     agg::conv_contour<agg::conv_curve<font_manager_type::path_adaptor_type> > m_contour;
 
@@ -213,7 +213,7 @@ public:
         m_ren_type.add_item("AGG Gray 8");
         m_ren_type.cur_item(1);
         add_ctrl(m_ren_type);
-        m_ren_type.no_transform();
+        //m_ren_type.no_transform(); //no_transform表示不跟随窗口变化
 
         m_height.label("Font Height=%.2f");
         m_height.range(8, 32);
@@ -221,7 +221,7 @@ public:
         m_height.value(18);
         m_height.text_thickness(1.5);
         add_ctrl(m_height);
-        m_height.no_transform();
+       // m_height.no_transform();
 
         m_width.label("Font Width=%.2f");
         m_width.range(8, 32);
@@ -229,31 +229,31 @@ public:
         m_width.text_thickness(1.5);
         m_width.value(18);
         add_ctrl(m_width);
-        m_width.no_transform();
+        //m_width.no_transform();
 
         m_weight.label("Font Weight=%.2f");
         m_weight.range(-1, 1);
         m_weight.text_thickness(1.5);
         add_ctrl(m_weight);
-        m_weight.no_transform();
+        //m_weight.no_transform();
 
         m_gamma.label("Gamma=%.2f");
         m_gamma.range(0.1, 2.0);
         m_gamma.value(1.0);
         m_gamma.text_thickness(1.5);
         add_ctrl(m_gamma);
-        m_gamma.no_transform();
+       // m_gamma.no_transform();
 
         add_ctrl(m_hinting);
         m_hinting.status(true);
-        m_hinting.no_transform();
+        //m_hinting.no_transform();
 
         add_ctrl(m_kerning);
         m_kerning.status(true);
-        m_kerning.no_transform();
+        //m_kerning.no_transform();
 
         add_ctrl(m_performance);
-        m_performance.no_transform();
+        //m_performance.no_transform();
 
         m_curves.approximation_scale(2.0);
         m_contour.auto_detect_orientation(false);

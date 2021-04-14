@@ -12,11 +12,11 @@ void sdl2_setup(const char* assertPath, int w, int h){
 
     _assetDir = static_cast<char *>(malloc(strlen(assertPath)+ 1));
     strcpy(_assetDir, assertPath);
-    LOGD("sdl_jnibridge_setup: _assetDir = %s, w= %d, h = %d", _assetDir, w, h);
+    LOGV("sdl_jnibridge_setup: _assetDir = %s, w= %d, h = %d", _assetDir, w, h);
 }
 
 extern "C" bool getFilePath(const char* p, char** out){
-    LOGD("getFilePath: _assetDir = %s", _assetDir);
+    LOGV("getFilePath: _assetDir = %s", _assetDir);
     if(_assetDir){
         int len_dir = strlen(_assetDir);
         char* arr = static_cast<char *>(malloc(strlen(p) + len_dir + 2)); // '/' and '\0'
