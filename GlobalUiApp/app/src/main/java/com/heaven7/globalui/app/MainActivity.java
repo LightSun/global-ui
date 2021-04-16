@@ -104,14 +104,16 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                //Bitmap result = merge(Arrays.asList(img1, img2), outFile);
                 //Bitmap result = merge(Arrays.asList("tmp/5.jpg", "tmp/6.jpg", "tmp/7.jpg"), Environment.getExternalStorageDirectory() + "/test3.png");
-                Bitmap result = merge(Arrays.asList("tmp/8.jpg", "tmp/9.jpg", "tmp/10.jpg"), Environment.getExternalStorageDirectory() + "/test4.png");
-
+                /*Bitmap result = merge(Arrays.asList("tmp/8.jpg", "tmp/9.jpg", "tmp/10.jpg"), Environment.getExternalStorageDirectory() + "/test4.png");
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         mIv.setImageBitmap(result);
                     }
-                });
+                });*/
+                Bitmap bitmap = toBitmap("tmp/1024x1024.png");
+                bitmap = Bitmap.createScaledBitmap(bitmap, 512, 512, true);
+                saveBitmap(bitmap, Environment.getExternalStorageDirectory() + "/test2.png");
             }
         });
     }
@@ -142,6 +144,11 @@ public class MainActivity extends AppCompatActivity {
             canvas.drawBitmap(bitmap, 0, top, null);
             top += bitmap.getHeight();
         }
+        saveBitmap(result, outFile);
+        return result;
+    }
+
+    private static void saveBitmap(Bitmap result, String outFile) {
         OutputStream out = null;
         try {
             out = new FileOutputStream(outFile);
@@ -151,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
         }finally {
             IOUtils.closeQuietly(out);
         }
-        return result;
     }
 
     private Bitmap toBitmap(String path){
