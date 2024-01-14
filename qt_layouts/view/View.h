@@ -29,6 +29,7 @@ struct LayoutParams{
 
 class Canvas;
 class ViewGroup;
+struct MotionEvent;
 
 class View{
 public:
@@ -117,6 +118,9 @@ public:
         }
         setSize(Size(targetW, targetH));
     }
+    bool hitTest(CPoint p);
+    //return true if handled
+    virtual bool onTouchEvent(MotionEvent* ){return false;}
 protected:
     virtual void onDraw(Canvas* c){}
     virtual void onMeasure(int& parentW, int& parentH){} //should call setSize.
@@ -133,6 +137,8 @@ protected:
     int m_flags {0};
     int m_id {0};
 };
+
+//------------------------
 
 class ViewGroup: public View{
 public:
@@ -154,10 +160,12 @@ public:
         m_views[i]->setParentView(nullptr);
         m_views.removeAt(i);
     }
-    SPView getViewAt(int index){return m_views[index];}
+    SPView getChildAt(int index){return m_views[index];}
     int getChildCount(){return m_views.size();}
 
     virtual void layout(CRect r){onLayout(r);}
+
+    virtual bool dispatchTouchEvent(MotionEvent* );
 
 protected:
     virtual void onLayout(CRect){} //should setPosition.
@@ -177,6 +185,7 @@ protected:
 
 protected:
     QList<SPView> m_views;
+    View* m_touched_view {nullptr};
 };
 
 }

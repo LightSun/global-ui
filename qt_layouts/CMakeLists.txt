@@ -29,8 +29,14 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
+## handler os
+set(HANDLER_OS_DIR D:/study/cpp/ENV/handler_os)
+include_directories(${HANDLER_OS_DIR}/include)
+set(HANDLER_LIB ${HANDLER_OS_DIR}/lib/libhandler_os.a pthread)
+
+# qt
 find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
-# core
+# old
 file(GLOB_RECURSE SRC_CORE qt_layouts/*.h
     qt_layouts/*.cpp
     qt_layouts/*.ui)
@@ -38,17 +44,26 @@ file(GLOB_RECURSE SRC_CORE qt_layouts/*.h
 add_library(qt_layouts
     ${SRC_CORE}
     )
-target_link_libraries(qt_layouts Qt5::Widgets)
+target_link_libraries(qt_layouts PUBLIC Qt5::Widgets)
 
 # view
+file(GLOB_RECURSE SRC_CORE core/*.h
+    core/*.cpp
+    input/*.h
+    input/*.cpp
+    )
 file(GLOB_RECURSE SRC_VIEW view/*.h
     view/*.cpp
     view/*.ui)
 
 add_library(qt_views
+    ${SRC_CORE}
     ${SRC_VIEW}
     )
-target_link_libraries(qt_views Qt5::Widgets)
+target_link_libraries(qt_views PUBLIC
+    Qt5::Widgets
+    ${HANDLER_LIB}
+    )
 
 # test
 file(GLOB_RECURSE SRC_TEST test/*.h

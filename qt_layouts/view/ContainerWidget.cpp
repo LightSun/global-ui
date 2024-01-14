@@ -1,6 +1,10 @@
+#include <QMouseEvent>
 #include "ContainerWidget.h"
 #include "View.h"
 #include "Canvas.h"
+#include "MotionEvent.h"
+
+using namespace h7_qt;
 
 ContainerWidget::ContainerWidget(QWidget* p):QWidget(p)
 {
@@ -36,4 +40,26 @@ void ContainerWidget::uninstallEvent(){
     setMouseTracking(false);
     setMouseTracking(false);
     removeEventFilter(this);
+}
+
+void ContainerWidget::mousePressEvent(QMouseEvent *event){
+     if(m_vg){
+         auto ev = MotionEvent::obtain(MotionEvent::ACTION_DOWN, 0, event->x(), event->y());
+         m_vg->dispatchTouchEvent(ev);
+         ev->recycle();
+     }
+}
+void ContainerWidget::mouseReleaseEvent(QMouseEvent *event){
+    if(m_vg){
+        auto ev = MotionEvent::obtain(MotionEvent::ACTION_UP, 0, event->x(), event->y());
+        m_vg->dispatchTouchEvent(ev);
+        ev->recycle();
+    }
+}
+void ContainerWidget::mouseMoveEvent(QMouseEvent *event){
+    if(m_vg){
+        auto ev = MotionEvent::obtain(MotionEvent::ACTION_MOVE, 0, event->x(), event->y());
+        m_vg->dispatchTouchEvent(ev);
+        ev->recycle();
+    }
 }

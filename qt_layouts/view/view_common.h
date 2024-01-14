@@ -1,21 +1,14 @@
 #pragma once
 
-#include <string>
-#include <memory>
-
-#define FUNC_NEW_SHARED(t)\
-    template <typename ...Args>\
-    static std::shared_ptr<t> New(Args&& ... args){\
-        return std::make_shared<t>(std::forward<Args>(args)...);\
-    }
-
-#define PRINTLN(fmt, ...) printf(fmt "\n", ##__VA_ARGS__)
+#include "core/h7_common.h"
 
 class QImage;
 class QColor;
 class QString;
 
 namespace h7_qt {
+
+typedef bool boolean ;
 
 using String = std::string;
 using CString = const std::string&;
@@ -46,12 +39,14 @@ struct Rect{
     static Rect ofXYWH(int x, int y, int w, int h){
         return Rect(x, y, x + w, y + h);
     }
-
     int width()const{
         return right - left;
     }
     int height()const{
         return bottom - top;
+    }
+    bool isPointIn(int x, int y)const{
+        return x >= left && x <= right && y >= top && y <= bottom;
     }
 };
 

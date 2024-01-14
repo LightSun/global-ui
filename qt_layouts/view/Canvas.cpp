@@ -146,5 +146,5 @@ void Self::drawPath(QColor* fill_color){
     }else{
         m_p->drawPath(m_path);
     }
-    m_path.clear();
+    m_path = QPainterPath();
 }
