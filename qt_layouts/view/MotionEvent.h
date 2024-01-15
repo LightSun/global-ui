@@ -2,7 +2,7 @@
 
 #include <map>
 #include <vector>
-#include "view_common.h"
+#include "view/view_common.h"
 
 namespace h7_qt {
 struct MotionEvent;

@@ -99,22 +99,15 @@ namespace h7 {
             }
             return 0;
         }
-        void computeCurrentVelocity(int pointer_id, int units, float maxVelocity){
-            if(pointer_id < 0){
-                auto it = m_map.begin();
-                while(it != m_map.end()){
-                    it->second.computeCurrentVelocity(units, maxVelocity);
-                    ++it;
-                }
-            }else{
-                auto it = m_map.find(pointer_id);
-                if(it != m_map.end()){
-                    it->second.computeCurrentVelocity(units, maxVelocity);
-                }
+        void computeCurrentVelocity(int units, float maxVelocity){
+            auto it = m_map.begin();
+            while(it != m_map.end()){
+                it->second.computeCurrentVelocity(units, maxVelocity);
+                ++it;
             }
         }
-        void computeCurrentVelocity(int pointer_id, int units){
-            computeCurrentVelocity(pointer_id, units, FLT_MAX);
+        void computeCurrentVelocity(int units){
+            computeCurrentVelocity(units, FLT_MAX);
         }
 
     private:

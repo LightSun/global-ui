@@ -1,6 +1,6 @@
 #pragma once
 
-#include "View.h"
+#include "view/View.h"
 
 namespace h7_qt {
 
@@ -16,7 +16,7 @@ public:
         kFlag_OVER_LINE   = 0x0008,
     };
     TextView();
-    ~TextView();
+    virtual ~TextView();
 
     FUNC_NEW_SHARED(TextView);
 

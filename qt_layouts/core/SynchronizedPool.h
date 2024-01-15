@@ -11,6 +11,12 @@ namespace h7 {
 
         SynchronizedPool(int size):m_maxSize(size){}
         SynchronizedPool():m_maxSize(0){}
+        ~SynchronizedPool(){
+            T* ref;
+            while(m_list.pollFirst(ref)){
+                delete ref;
+            }
+        }
 
         template <typename ...Args>
         T* acquire(Args&& ... args){
@@ -22,6 +28,7 @@ namespace h7 {
         }
         void release(T* spt){
             if(m_maxSize > 0 && m_list.size() == m_maxSize){
+                delete spt;
                 return;
             }
             m_list.addLast(spt);

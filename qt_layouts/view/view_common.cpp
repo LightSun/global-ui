@@ -10,6 +10,7 @@ namespace h7_qt {
 struct _Image_ctx{
     QImage image;
     QPixmap pixmap;
+    std::function<void(Canvas* c,int w, int h)> builder;
     bool dirty {true};
 
     bool loadFromFile(CString file, const char* fmt){
@@ -27,6 +28,12 @@ struct _Image_ctx{
         return true;
     }
     void fitWH(int w, int h){
+        if(builder){
+            image = QImage(w, h, QImage::Format_ARGB32);
+            Canvas c(&image);
+            builder(&c, w ,h);
+            return;
+        }
         if(image.isNull()){
             return;
         }
@@ -49,6 +56,15 @@ struct _Image_ctx{
             pixmap = QPixmap();
             return;
         }
+        if(builder){
+            image = QImage(w, h, QImage::Format_ARGB32);
+            {
+            Canvas c(&image);
+            builder(&c, w, h);
+            }
+            pixmap = QPixmap::fromImage(image);
+            return;
+        }
         if(image.isNull()){
             return;
         }
@@ -64,6 +80,7 @@ struct _Image_ctx{
        image = QImage(c.image);
        pixmap = QPixmap(c.pixmap);
        dirty = c.dirty;
+       builder = c.builder;
        return *this;
    }
    void setImage(QImage* i){
@@ -118,6 +135,10 @@ int Image::height()const{
 }
 void Image::fitWH(int w, int h){
     m_ptr->fitWH(w, h);
+}
+
+void Image::setBuilder(std::function<void(Canvas* c,int w, int h)> func){
+    m_ptr->builder = func;
 }
 bool Image::loadFromFile(CString file, const char* fmt){
     return m_ptr->loadFromFile(file, fmt);

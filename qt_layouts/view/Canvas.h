@@ -21,6 +21,7 @@ public:
     using CImage = const Image&;
 
     Canvas(QWidget* w, const QRect& rect);
+    Canvas(QImage* img);
     ~Canvas();
 
     void setViewport(CQRect c);

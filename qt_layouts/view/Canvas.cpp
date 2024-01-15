@@ -21,6 +21,15 @@ Canvas::Canvas(QWidget* w, const QRect& rect): m_w(w)
     m_pen.setCapStyle(Qt::RoundCap);
     m_pen.setJoinStyle(Qt::BevelJoin);
 }
+Canvas::Canvas(QImage* img){
+     m_p = new QPainter(img);
+     m_p->setRenderHint(QPainter::Antialiasing, true);
+     m_p->setRenderHint(QPainter::TextAntialiasing, true);
+
+     m_pen.setStyle(Qt::SolidLine);
+     m_pen.setCapStyle(Qt::RoundCap);
+     m_pen.setJoinStyle(Qt::BevelJoin);
+}
 Canvas::~Canvas(){
     if(m_p){
         delete m_p;

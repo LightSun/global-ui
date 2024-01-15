@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include "core/h7_common.h"
 
 class QImage;
@@ -79,6 +80,8 @@ public:
     bool isValid()const;
     int width()const;
     int height()const;
+
+    void setBuilder(std::function<void(Canvas* c, int w, int h)> func);
 
     bool loadFromFile(CString file, const char *format = nullptr);
     bool loadFromBuffer(const char* data, int len, const char *format = nullptr);

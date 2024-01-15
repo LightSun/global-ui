@@ -13,13 +13,6 @@ using namespace h7_qt;
 using namespace h7_handler_os;
 using SPHandler = std::shared_ptr<h7_handler_os::Handler>;
 
-struct GestureDetectorCompatImpl {
-    virtual boolean isLongpressEnabled() = 0;
-    virtual boolean onTouchEvent(MotionEventPtr ev) = 0;
-    virtual void setIsLongpressEnabled(boolean enabled) = 0;
-    virtual void setOnDoubleTapListener(OnDoubleTapListener* listener) = 0;
-};
-
 static int LONGPRESS_TIMEOUT = ViewConfiguration::getLongPressTimeout();
 static int TAP_TIMEOUT = ViewConfiguration::getTapTimeout();
 static int DOUBLE_TAP_TIMEOUT = ViewConfiguration::getDoubleTapTimeout();
@@ -28,6 +21,13 @@ enum{
     SHOW_PRESS = 1,
     LONG_PRESS = 2,
     TAP = 3
+};
+
+struct GestureDetectorCompatImpl {
+    virtual boolean isLongpressEnabled() = 0;
+    virtual boolean onTouchEvent(MotionEventPtr ev) = 0;
+    virtual void setIsLongpressEnabled(boolean enabled) = 0;
+    virtual void setOnDoubleTapListener(OnDoubleTapListener* listener) = 0;
 };
 
 namespace h7_qt {
@@ -277,16 +277,16 @@ public:
                                mCurrentDownEvent, e, velocityX, velocityY);
                    }
                }
-               if (mPreviousUpEvent != null) {
+               if (mPreviousUpEvent != nullptr) {
                    mPreviousUpEvent->recycle();
                }
                // Hold the event we obtained above - listeners may have changed the original.
                mPreviousUpEvent = currentUpEvent;
-               if (mVelocityTracker != null) {
+               if (mVelocityTracker != nullptr) {
                    // This may have been cleared when we called out to the
                    // application above.
                    mVelocityTracker->recycle();
-                   mVelocityTracker = null;
+                   mVelocityTracker = nullptr;
                }
                mIsDoubleTapping = false;
                mDeferConfirmSingleTap = false;
@@ -346,7 +346,7 @@ private:
        mHandler.removeMessages(TAP);
        if(mVelocityTracker){
            mVelocityTracker->recycle();
-           mVelocityTracker = null;
+           mVelocityTracker = nullptr;
        }
        mIsDoubleTapping = false;
        mStillDown = false;
@@ -387,7 +387,7 @@ GestureDetector::GestureDetector(OnGestureListener* l, Looper* looper)
 GestureDetector::~GestureDetector(){
     if(m_impl){
         delete m_impl;
-        m_impl = null;
+        m_impl = nullptr;
     }
 }
 boolean GestureDetector::isLongpressEnabled(){

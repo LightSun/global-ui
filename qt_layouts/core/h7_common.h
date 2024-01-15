@@ -24,5 +24,3 @@
         fprintf(stderr, fmt "\n", ##__VA_ARGS__);\
         abort();\
     }
-
-#define null nullptr
