@@ -14,5 +14,5 @@ void ImageView::onMeasure(int& parentW, int& parentH){
 }
 
 void ImageView::onDraw(Canvas* c){
-    c->drawImage(&m_image, m_padding.left, m_padding.top);
+    c->drawImage(&m_image, m_padding.left - 1, m_padding.top);
 }

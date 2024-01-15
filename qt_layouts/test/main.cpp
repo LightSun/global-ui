@@ -52,7 +52,8 @@ static QLayout* newLayout(QWidget* p){
     l->setStyleSheet("background:#ff0000");
     l->setText("heaven7_" + ids);
     auto layout = new QVBoxLayout();
-    layout->setMargin(5);
+    //layout->setMargin(5);
+    layout->setContentsMargins(5, 5, 5, 5);
     layout->setSpacing(0);
     layout->addWidget(l);
     return layout;

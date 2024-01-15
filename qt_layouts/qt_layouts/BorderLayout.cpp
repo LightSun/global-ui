@@ -7,8 +7,9 @@
 BorderLayout::BorderLayout(QWidget *parent, int margin, int spacing)
   : QLayout(parent)
 {
-  setMargin(margin);
-  setSpacing(spacing);
+  //setMargin(margin);
+    setContentsMargins(margin, margin, margin, margin);
+    setSpacing(spacing);
 }
 
 BorderLayout::BorderLayout(int spacing)

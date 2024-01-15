@@ -6,6 +6,8 @@
 
 using namespace h7_qt;
 
+#define _QT_DEF_IMG_FMT QImage::Format_RGBA8888
+
 namespace h7_qt {
 struct _Image_ctx{
     QImage image;
@@ -29,9 +31,10 @@ struct _Image_ctx{
     }
     void fitWH(int w, int h){
         if(builder){
-            image = QImage(w, h, QImage::Format_ARGB32);
+            image = QImage(w, h, _QT_DEF_IMG_FMT);
             Canvas c(&image);
             builder(&c, w ,h);
+            c.end();
             return;
         }
         if(image.isNull()){
@@ -57,10 +60,11 @@ struct _Image_ctx{
             return;
         }
         if(builder){
-            image = QImage(w, h, QImage::Format_ARGB32);
+            image = QImage(w, h, _QT_DEF_IMG_FMT);
             {
             Canvas c(&image);
             builder(&c, w, h);
+            c.end();
             }
             pixmap = QPixmap::fromImage(image);
             return;
@@ -89,7 +93,7 @@ struct _Image_ctx{
    }
    void setColor(CQColor c){
        if(image.isNull()){
-          image = QImage(10, 10, QImage::Format_ARGB32);
+          image = QImage(10, 10, _QT_DEF_IMG_FMT);
        }
        image.fill(c);
        dirty = true;
@@ -161,6 +165,7 @@ void Image::prepareDraw(int w, int h){
 }
 void Image::draw(Canvas* c, int x, int y){
     if(!m_ptr->pixmap.isNull()){
+        //m_ptr->pixmap.setDevicePixelRatio(0.8);
         c->drawPixmap(m_ptr->pixmap, x, y);
     }
 }

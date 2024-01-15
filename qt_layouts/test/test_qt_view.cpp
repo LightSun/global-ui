@@ -3,6 +3,7 @@
 #include "view/LinearLayout.h"
 #include "view/TextView.h"
 #include "view/ImageView.h"
+#include "view/ButtonView.h"
 #include <QApplication>
 
 using namespace h7_qt;
@@ -23,15 +24,16 @@ int test_qt_view(int argc, char* argv[]){
 }
 
 static inline std::shared_ptr<TextView> createTextView(){
-    auto v = TextView::New();
+    //auto v = TextView::New();
+    auto v = ButtonView::New();
     v->setText("Hello Heaven7! Good luck!");
     v->setTextColor(Qt::red);
     v->setTextSize(18);
     v->setMargin({5,5,5,5});
     v->setPadding({10, 10, 10, 10});
-    Image img;
-    img.setQColor(Qt::blue);
-    v->setBackground(std::move(img));
+    // Image img;
+    // img.setQColor(Qt::blue);
+    // v->setBackground(std::move(img));
     return v;
 }
 

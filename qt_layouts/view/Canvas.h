@@ -3,6 +3,7 @@
 #include <QWidget>
 #include <QRect>
 #include <QPen>
+#include <QPainterPath>
 
 namespace h7_qt {
 
@@ -73,6 +74,8 @@ public:
    // SelfR addPolygonF(const QPolygonF& pf);
     QPainterPath& getPath(){return m_path;}
     void drawPath(QColor* fill_color = nullptr);
+
+    void end();
 
 private:
     QPainter* m_p;

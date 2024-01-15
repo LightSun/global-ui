@@ -35,7 +35,14 @@ include_directories(${HANDLER_OS_DIR}/include)
 set(HANDLER_LIB ${HANDLER_OS_DIR}/lib/libhandler_os.a pthread)
 
 # qt
-find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
+#find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
+find_package(QT NAMES Qt5 Qt6 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets)
+#set(QT_LIBS Qt5::Widgets)
+
+set(QT_LIBS Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Widgets)
+message(STATUS "QT_LIBS: ${QT_LIBS}")
+
 # old
 file(GLOB_RECURSE SRC_CORE qt_layouts/*.h
     qt_layouts/*.cpp
@@ -44,7 +51,7 @@ file(GLOB_RECURSE SRC_CORE qt_layouts/*.h
 add_library(qt_layouts
     ${SRC_CORE}
     )
-target_link_libraries(qt_layouts PUBLIC Qt5::Widgets)
+target_link_libraries(qt_layouts PUBLIC ${QT_LIBS})
 
 # view
 file(GLOB_RECURSE SRC_CORE core/*.h
@@ -61,7 +68,7 @@ add_library(qt_views
     ${SRC_VIEW}
     )
 target_link_libraries(qt_views PUBLIC
-    Qt5::Widgets
+    ${QT_LIBS}
     ${HANDLER_LIB}
     )
 
@@ -72,4 +79,8 @@ file(GLOB_RECURSE SRC_TEST test/*.h
 add_executable(test_qt_layouts
     ${SRC_TEST}
     )
-target_link_libraries(test_qt_layouts PUBLIC qt_layouts qt_views)
+target_link_libraries(test_qt_layouts PUBLIC
+    qt_layouts
+    qt_views
+    ${QT_LIBS}
+)

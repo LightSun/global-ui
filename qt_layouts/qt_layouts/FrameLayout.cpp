@@ -5,8 +5,8 @@
 FrameLayout::FrameLayout(QWidget* p): AbstractLayout(p)
 {
     setSpacing(0);
-    setMargin(0);
-   // setContentsMargins(0, 0, 0, 0);
+    //setMargin(0);
+    setContentsMargins(0, 0, 0, 0);
 }
 FrameLayout::~FrameLayout(){
 

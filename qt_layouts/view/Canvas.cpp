@@ -12,23 +12,21 @@ using SelfR = Canvas&;
 Canvas::Canvas(QWidget* w, const QRect& rect): m_w(w)
 {
     m_p = new QPainter(w);
-    m_p->setRenderHint(QPainter::Antialiasing, true);
-    m_p->setRenderHint(QPainter::TextAntialiasing, true);
+    m_p->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
     m_p->setViewport(rect);
     //
     m_font = w->font();
     m_pen.setStyle(Qt::SolidLine);
     m_pen.setCapStyle(Qt::RoundCap);
-    m_pen.setJoinStyle(Qt::BevelJoin);
+    m_pen.setJoinStyle(Qt::RoundJoin);
 }
 Canvas::Canvas(QImage* img){
      m_p = new QPainter(img);
-     m_p->setRenderHint(QPainter::Antialiasing, true);
-     m_p->setRenderHint(QPainter::TextAntialiasing, true);
+     m_p->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
      m_pen.setStyle(Qt::SolidLine);
      m_pen.setCapStyle(Qt::RoundCap);
-     m_pen.setJoinStyle(Qt::BevelJoin);
+     m_pen.setJoinStyle(Qt::RoundJoin);
 }
 Canvas::~Canvas(){
     if(m_p){
@@ -156,4 +154,7 @@ void Self::drawPath(QColor* fill_color){
         m_p->drawPath(m_path);
     }
     m_path = QPainterPath();
+}
+void Self::end(){
+    m_p->end();
 }
