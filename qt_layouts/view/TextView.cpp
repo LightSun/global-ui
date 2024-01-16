@@ -48,10 +48,8 @@ void TextView::onMeasure(int& parentW, int& parentH){
     QFont font;
     applyToFont(font);
     QFontMetrics fm(font);
-    int w = fm.horizontalAdvance(m_ptr->text) + m_padding.left + m_padding.right;
-    int h = fm.height() + m_padding.top + m_padding.bottom;
-    parentW = w;
-    parentH = h;
+    parentW = fm.horizontalAdvance(m_ptr->text);
+    parentH = fm.height();
 }
 void TextView::applyToFont(QFont& font){
     font.setPixelSize(m_textSize);

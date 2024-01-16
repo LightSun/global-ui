@@ -4,11 +4,66 @@
 
 using namespace h7_qt;
 
+View::View(){
+    m_layoutP = std::make_shared<LayoutParams>();
+    //setDrawingCacheEnabled(true);
+}
 
+View::~View(){
+    if(m_cacheImg){
+        delete m_cacheImg;
+        m_cacheImg = nullptr;
+    }
+}
+void View::setDrawingCacheEnabled(bool enable){
+    m_drawCached = enable;
+    if(m_cacheImg){
+        delete m_cacheImg;
+        m_cacheImg = nullptr;
+    }
+    if(enable){
+        m_cacheImg = new Image();
+        m_cacheImg->setBuilder([this](Canvas* c,int w, int h){
+            c->drawImage(&m_bg, 0, 0);
+            onDraw(c);
+        });
+        if(m_size.w != 0 && m_size.h != 0){
+             m_cacheImg->prepareDraw(m_size.w, m_size.h);
+        }
+    }
+}
+void View::onSizeChanged(CSize s){
+    if(m_drawCached){
+        m_cacheImg->prepareDraw(s.w, s.h);
+    }
+}
+void View::drawDirect(Canvas* c){
+    int& offsetX = m_position.x;
+    int& offsetY = m_position.y;
+    c->translate(offsetX, offsetY);
+    c->drawImage(&m_bg, 0, 0);
+    onDraw(c);
+    c->translate(-offsetX, -offsetY);
+}
+
+//TODO have bug? with 'setDrawingCacheEnabled'
+void View::drawInCached(Canvas* c){
+    if(m_cacheImg){
+        PRINTLN("drawInCached: p.x,y = %d, %d", m_position.x, m_position.y);
+        int& offsetX = m_position.x;
+        int& offsetY = m_position.y;
+        c->translate(offsetX, offsetY);
+        c->drawImage(m_cacheImg, m_padding.left, m_padding.top);
+        c->translate(-offsetX, -offsetY);
+    }
+}
 bool View::hitTest(CPoint p){
     // e->x
-    return Rect::ofXYWH(m_position.x, m_position.y, m_size.width(), m_size.height()).isPointIn(p.x, p.y);
+    return Rect::ofXYWH(m_position.x, m_position.y, m_size.width(), m_size.height())
+        .isPointIn(p.x, p.y);
 }
+
+//----------------------------------
 bool ViewGroup::dispatchTouchEvent(MotionEvent* ev){
     bool handled = false;
     if(ev->getActionMasked() != MotionEvent::ACTION_DOWN){

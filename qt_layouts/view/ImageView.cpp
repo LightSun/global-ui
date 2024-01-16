@@ -8,8 +8,8 @@ ImageView::ImageView()
 }
 
 void ImageView::onMeasure(int& parentW, int& parentH){
-    parentW = m_image.width() + m_padding.left + m_padding.right;
-    parentH = m_image.height() + m_padding.top + m_padding.bottom;
+    parentW = m_image.width();
+    parentH = m_image.height();
     //PRINTLN("ImageView::onMeasure >> w,h = %d, %d", parentW, parentH);
 }
 

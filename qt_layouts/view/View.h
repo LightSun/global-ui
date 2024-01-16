@@ -2,6 +2,7 @@
 
 #include "view/Canvas.h"
 #include "view/view_common.h"
+#include "view/Gravity.h"
 
 namespace h7_qt {
 
@@ -10,22 +11,11 @@ enum{
     kLAYOUT_WRAP_CONTENT = -2,
 };
 
-enum {
-    kGravity_LEFT    = 0x0001,
-    kGravity_RIGHT   = 0x0002,
-    kGravity_HCENTER = 0x0004,
-
-    kGravity_TOP     = 0x0020,
-    kGravity_BOTTOM  = 0x0040,
-    kGravity_VCENTER = 0x0080,
-};
-
 struct LayoutParams{
     int gravity = kGravity_HCENTER | kGravity_VCENTER;
     int width {kLAYOUT_WRAP_CONTENT};
     int height {kLAYOUT_WRAP_CONTENT};
 };
-
 
 class Canvas;
 class ViewGroup;
@@ -34,14 +24,13 @@ struct MotionEvent;
 class View{
 public:
     using SPLayoutP = std::shared_ptr<LayoutParams>;
+    using OnClickListener = std::function<void(View* v)>;
 
     enum{
         kFlags_IGNORE_BACKGROUND = 1
     };
-    View(){
-        m_layoutP = std::make_shared<LayoutParams>();
-    }
-    ~View(){}
+    View();
+    virtual ~View();
 
     void setParentView(ViewGroup* p){
         m_parent = p;
@@ -51,6 +40,9 @@ public:
     }
     void setLayoutParams(SPLayoutP p){
         m_layoutP = p;
+    }
+    SPLayoutP getLayoutParams(){
+        return m_layoutP;
     }
     void setFlags(int flags){m_flags = flags;}
     void addFlags(int flags){m_flags |= flags;}
@@ -69,11 +61,15 @@ public:
         setSize(Size(w, h));
     }
     virtual void setSize(CSize c){
-        if(!hasFlag(kFlags_IGNORE_BACKGROUND)){
-            m_bg.prepareDraw(c.width(), c.height());
+        //if(!m_size.equals(c)){
+        if(m_size != c){
+            if(!hasFlag(kFlags_IGNORE_BACKGROUND)){
+                m_bg.prepareDraw(c.width(), c.height());
+            }
+            m_size = c;
+            onSizeChanged(c);
         }
-        m_size = c;
-        PRINTLN("setSize: w,h = %d, %d", c.width(), c.height());
+        //PRINTLN("setSize: w,h = %d, %d", c.width(), c.height());
     }
     Size& getSize(){return m_size;}
 
@@ -94,18 +90,21 @@ public:
         m_position = p;
         PRINTLN("setPosition: p.x,y = %d, %d", p.x, p.y);
     }
+    void setDrawingCacheEnabled(bool enable);
     void draw(Canvas* c){
-        int& offsetX = m_position.x;
-        int& offsetY = m_position.y;
-        c->translate(offsetX, offsetY);
-        c->drawImage(&m_bg, 0, 0);
-        onDraw(c);
-        c->translate(-offsetX, -offsetY);
+        if(m_drawCached){
+            drawInCached(c);
+        }else{
+            drawDirect(c);
+        }
     }
     void measure(int parentW, int parentH){
         int targetW = parentW;
         int targetH = parentH;
         onMeasure(targetW, targetH);
+        //add padding
+        targetW += m_padding.widthSpace();
+        targetH += m_padding.heightSpace();
         if(m_layoutP->width == kLAYOUT_MATCH_PARENT){
             if(parentW > targetW){
                 targetW = parentW;
@@ -123,7 +122,14 @@ public:
     virtual bool onTouchEvent(MotionEvent* ){return false;}
 protected:
     virtual void onDraw(Canvas* c){}
-    virtual void onMeasure(int& parentW, int& parentH){} //should call setSize.
+    //without this view's padding
+    virtual void onMeasure(int& parentW, int& parentH){}
+
+    virtual void onSizeChanged(CSize s);
+
+private:
+    void drawDirect(Canvas* c);
+    void drawInCached(Canvas* c);
 
 protected:
     Rect m_padding;
@@ -133,9 +139,12 @@ protected:
 
     SPLayoutP m_layoutP;
     Image m_bg;
+    Image* m_cacheImg {nullptr};
     ViewGroup* m_parent{nullptr};
+    OnClickListener m_func_click;
     int m_flags {0};
     int m_id {0};
+    bool m_drawCached {false};
 };
 
 //------------------------

@@ -40,6 +40,12 @@ struct Rect{
     static Rect ofXYWH(int x, int y, int w, int h){
         return Rect(x, y, x + w, y + h);
     }
+    int widthSpace()const{
+        return left + right;
+    }
+    int heightSpace()const{
+        return bottom + top;
+    }
     int width()const{
         return right - left;
     }
@@ -68,7 +74,17 @@ struct Size{
     void setHeight(int h){this->h = h;}
     int width()const{return w;}
     int height()const{return h;}
+
+    bool equals(const Size& s)const{
+        return w ==s.w && h ==s.h;
+    }
 };
+static inline bool operator==(const Size& s1, const Size& s2){
+    return s1.w == s2.w && s1.h == s2.h;
+}
+static inline bool operator!=(const Size& s1, const Size& s2){
+    return s1.w != s2.w || s1.h != s2.h;
+}
 
 //
 typedef struct _Image_ctx _Image_ctx;

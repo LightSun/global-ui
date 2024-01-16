@@ -28,8 +28,8 @@ int test1(int argc, char* argv[]){
     QWidget w;
     w.setFixedSize(500, 500);
     //test_border_layouts(&w);
-    test_frame_layouts(&w);
-    //test_frame_layouts2(&w);
+    //test_frame_layouts(&w);
+    test_frame_layouts2(&w);
     w.show();
 
     return app.exec();

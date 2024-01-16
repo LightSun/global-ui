@@ -42,14 +42,18 @@ void LinearLayout::onMeasure(int& w, int& h){
     h = th;
 }
 void LinearLayout::onLayout(CRect r){
+    int top = r.top + m_padding.top;
+    int left = r.left + m_padding.left;
+    //
     int vsize = m_views.size();
     if(m_vertical){
-        int top = r.top;
         for(int i = 0 ; i < vsize ; ++i){
             auto& v = m_views[i];
             auto size = v->getBoxSize();
-            v->setPosition(Point(r.left + v->getMargin().left,
-                                  top + v->getMargin().top));
+            int x_offset;
+            x_offset = Gravity::computeXOffsetWithMargin(r.width(), size.width(),
+                                                         v->getMargin(), v->getLayoutParams()->gravity);
+            v->setPosition(Point(left + x_offset, top + v->getMargin().top));
             top += size.height();
             //space
             if(i != vsize - 1){
@@ -57,12 +61,12 @@ void LinearLayout::onLayout(CRect r){
             }
         }
     }else{
-        int left = r.left;
         for(int i = 0 ; i < vsize ; ++i){
             auto& v = m_views[i];
             auto size = v->getBoxSize();
-            v->setPosition(Point(left + v->getMargin().left,
-                                  r.top + v->getMargin().top));
+            int y_offset = Gravity::computeYOffsetWithMargin(r.height(), size.height(),
+                                                             v->getMargin(), v->getLayoutParams()->gravity);
+            v->setPosition(Point(left + v->getMargin().left, top + y_offset));
             left += size.width();
             //space
             if(i != vsize - 1){

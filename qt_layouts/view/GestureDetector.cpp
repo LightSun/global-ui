@@ -382,6 +382,9 @@ private:
 
 GestureDetector::GestureDetector(OnGestureListener* l, Looper* looper)
 {
+    // if(looper == nullptr){
+    //     looper = Looper::getMainLooper().get();
+    // }
     m_impl = new GestureDetectorImpl(l, looper);
 }
 GestureDetector::~GestureDetector(){

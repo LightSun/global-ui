@@ -32,7 +32,9 @@ struct _Image_ctx{
     void fitWH(int w, int h){
         if(builder){
             image = QImage(w, h, _QT_DEF_IMG_FMT);
+            image.fill(0);
             Canvas c(&image);
+            c.setViewport(QRect(0, 0, w, h));
             builder(&c, w ,h);
             c.end();
             return;
@@ -61,10 +63,12 @@ struct _Image_ctx{
         }
         if(builder){
             image = QImage(w, h, _QT_DEF_IMG_FMT);
+            image.fill(0);
             {
-            Canvas c(&image);
-            builder(&c, w, h);
-            c.end();
+                Canvas c(&image);
+                c.setViewport(QRect(0, 0, w, h));
+                builder(&c, w, h);
+                c.end();
             }
             pixmap = QPixmap::fromImage(image);
             return;
