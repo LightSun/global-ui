@@ -27,50 +27,53 @@ public:
 
     void setViewport(CQRect c);
     void translate(int dx, int dy);
+    void clipRect(CRect rect);
+    void save();
+    void restore();
+    void setCompositionMode(int mode);
+    void setCompositionModeDst();
 
     void setFont(CQFont cf);
 
-    SelfR setStrokeSize(float stroke){
+    void setStrokeSize(float stroke){
         m_font.setPixelSize(stroke);
         m_pen.setWidthF(stroke);
-        return *this;
     }
-    SelfR setColor(CQColor c){
+    void setColor(CQColor c){
         m_pen.setColor(c);
-        return *this;
     }
     ///apply pen, font.
-    SelfR applyStyle();
+    void applyStyle();
     //self
-    SelfR drawText(CQString text, Rect* rect);
-    SelfR drawText(CQString text, Rect* rect, int alignFlags);
-    SelfR drawImage(Image* pm, int left, int top);
+    void drawText(CQString text, Rect* rect);
+    void drawText(CQString text, Rect* rect, int alignFlags);
+    void drawImage(Image* pm, int left, int top);
 
-    SelfR drawText(CQString text, CRect rect){
-        return drawText(text, (Rect*)&rect);
+    void drawText(CQString text, CRect rect){
+        drawText(text, (Rect*)&rect);
     }
-    SelfR drawText(CQString text, CRect rect, int alignFlags){
-        return drawText(text, (Rect*)&rect, alignFlags);
+    void drawText(CQString text, CRect rect, int alignFlags){
+        drawText(text, (Rect*)&rect, alignFlags);
     }
-    SelfR drawImage(CImage pm, int left, int top){
-        return drawImage((Image*)&pm, left, top);
+    void drawImage(CImage pm, int left, int top){
+        drawImage((Image*)&pm, left, top);
     }
     //
-    SelfR drawLine(int x1, int y1 ,int x2, int y2);
-    SelfR drawText(CQString text, CQRect rect);
-    SelfR drawText(CQString text, CQRect rect, int alignFlags);
-    SelfR drawText(CQString text, int left, int top);
+    void drawLine(int x1, int y1 ,int x2, int y2);
+    void drawText(CQString text, CQRect rect);
+    void drawText(CQString text, CQRect rect, int alignFlags);
+    void drawText(CQString text, int left, int top);
     //fill_color: null means just stroke
     //xRadius, yRadius: for round rect
-    SelfR drawRect(CQRect rect, float xRadius = 0, float yRadius = 0,
+    void drawRect(CQRect rect, float xRadius = 0, float yRadius = 0,
                    QColor* fill_color = nullptr);
-    SelfR drawEllipse(CQRect rect, QColor* fill_color = nullptr);
-    SelfR drawPolygonF(const QPolygonF& pf, QColor* fill_color = nullptr);
-    SelfR drawPixmap(const QPixmap& pm, int left, int top);
+    void drawEllipse(CQRect rect, QColor* fill_color = nullptr);
+    void drawPolygonF(const QPolygonF& pf, QColor* fill_color = nullptr);
+    void drawPixmap(const QPixmap& pm, int left, int top);
 
-    SelfR addRect(CQRect rect, float xRadius = 0, float yRadius = 0);
-    SelfR addPolygonF(const QPolygonF& pf);
-    SelfR addText(const QPointF &point, const QFont &f, const QString &text);
+    void addRect(CQRect rect, float xRadius = 0, float yRadius = 0);
+    void addPolygonF(const QPolygonF& pf);
+    void addText(const QPointF &point, const QFont &f, const QString &text);
    // SelfR addPolygonF(const QPolygonF& pf);
     QPainterPath& getPath(){return m_path;}
     void drawPath(QColor* fill_color = nullptr);

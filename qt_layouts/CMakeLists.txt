@@ -43,10 +43,28 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets)
 set(QT_LIBS Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Widgets)
 message(STATUS "QT_LIBS: ${QT_LIBS}")
 
+## skia
+
+set(SKIA_DIR D:/study/cpp/ENV/skia)
+set(SKIA_INC ${SKIA_DIR})
+find_library(LIB_SKIA skia expat gif jpeg-turbo png zlib HINTS "${SKIA_DIR}/lib")
+
+add_library(skia STATIC IMPORTED GLOBAL)
+set_target_properties(skia PROPERTIES IMPORTED_LOCATION
+    ${LIB_SKIA}
+)
+# set_target_properties(skia PROPERTIES
+#   IMPORTED_LOCATION "${LIB_MATH_RELEASE}"
+#   IMPORTED_LOCATION_DEBUG "${LIB_MATH_DEBUG}"
+#   IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
+# )
+
 # old
 file(GLOB_RECURSE SRC_CORE qt_layouts/*.h
     qt_layouts/*.cpp
     qt_layouts/*.ui)
+
+source_group(OLD_SRC FILES ${SRC_CORE})
 
 add_library(qt_layouts
     ${SRC_CORE}
@@ -62,20 +80,24 @@ file(GLOB_RECURSE SRC_CORE core/*.h
 file(GLOB_RECURSE SRC_VIEW view/*.h
     view/*.cpp
     view/*.ui)
-
+source_group(VIEW FILES ${SRC_CORE} ${SRC_VIEW})
 add_library(qt_views
     ${SRC_CORE}
     ${SRC_VIEW}
     )
+target_include_directories(qt_views PRIVATE ${SKIA_INC})
 target_link_libraries(qt_views PUBLIC
     ${QT_LIBS}
     ${HANDLER_LIB}
+    skia
     )
 
 # test
 file(GLOB_RECURSE SRC_TEST test/*.h
     test/*.cpp
     test/*.ui)
+
+source_group(TESTS FILES ${SRC_TEST})
 add_executable(test_qt_layouts
     ${SRC_TEST}
     )

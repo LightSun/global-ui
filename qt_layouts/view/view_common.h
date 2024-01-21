@@ -9,6 +9,7 @@ class QString;
 
 namespace h7_qt {
 
+using uint8 = unsigned char;
 typedef bool boolean ;
 
 using String = std::string;
