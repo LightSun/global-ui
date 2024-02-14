@@ -1,49 +1,13 @@
 #pragma once
 
 #include "view_common.h"
+#include "include/core/SkCanvas.h"
+#include "include/core/SkFont.h"
+#include "include/core/SkTextBlob.h"
+#include "view/Gravity.h"
 
 namespace h7_qt {
 
-typedef struct _SkiaCanvas_ctx _SkiaCanvas_ctx;
-
-class Paint;
-using SPPaint = std::shared_ptr<Paint>;
-
-class Paint{
-public:
-    enum Style{
-        kFill_Style,          //!< set to fill geometry
-        kStroke_Style,        //!< set to stroke geometry
-        kStrokeAndFill_Style, //!< sets to stroke and fill geometry
-    };
-    enum Cap {
-        kButt_Cap,                  //!< no stroke extension
-        kRound_Cap,                 //!< adds circle
-        kSquare_Cap,                //!< adds square
-        kLast_Cap    = kSquare_Cap, //!< largest Cap value
-        kDefault_Cap = kButt_Cap,   //!< equivalent to kButt_Cap
-    };
-    enum Join : uint8_t {
-        kMiter_Join,                 //!< extends to miter limit
-        kRound_Join,                 //!< adds circle
-        kBevel_Join,                 //!< connects outside edges
-        kLast_Join    = kBevel_Join, //!< equivalent to the largest value for Join
-        kDefault_Join = kMiter_Join, //!< equivalent to kMiter_Join
-    };
-    void setColor(int rgba);
-    void setARGB(uint8 a, uint8 r, uint8 g, uint8 b);
-    void setStrokeWidth(float width);
-    void setAntiAlias(bool aa);
-    void setDither(bool dither);
-    void setStyle(Style style);
-    void setStroke(bool); //strokr or fill
-
-    void setAlphaf(float a);
-    void setAlpha(uint8 a);
-    void setStrokeMiter(float miter);
-    void setStrokeCap(Cap cap);
-    void setStrokeJoin(Join join);
-};
 
 class SkiaCanvas
 {
@@ -51,10 +15,48 @@ public:
     SkiaCanvas(int w, int h);
     ~SkiaCanvas();
 
-    void translate(int dx, int dy);
+    SkCanvas& getCanvas()const{return *m_canvas;}
+    SkImageInfo getImageInfo()const{return m_canvas->imageInfo();}
+
+    void translate(Scala dx, Scala dy){m_canvas->translate(dx, dy);}
+    void rotate(Scala degrees){m_canvas->rotate(degrees);}
+    void scale(Scala sx, Scala sy){m_canvas->scale(sx, sy);}
+
+    void save(){m_canvas->save();}
+    void restore(){m_canvas->restore();}
+
+    void resetFont(){m_font = SkFont();}
+    void resetPaint(){m_paint.reset();}
+    SkFont& getFont(){return m_font;}
+    SkPaint& getPaint(){return m_paint;}
+
+    //with current paint
+    void drawLine(int x1, int y1 ,int x2, int y2);
+    void drawRect(const SkRect& r);
+    void drawIRect(const SkIRect& r);
+    void drawOval(const SkRect& r);
+    void drawCircle(SkScalar cx, SkScalar cy, SkScalar radius);
+    void drawArc(const SkRect& oval, SkScalar startAngle, SkScalar sweepAngle, bool useCenter);
+    void drawRoundRect(const SkRect& rect, SkScalar rx, SkScalar ry);
+    void drawPath(const SkPath& path);
+    //with current paint and font
+    void drawText(const SkString& text, CRect rect);
+    void drawText(const SkString& text, Scala left, Scala top);
+    //SkPaint containing SkBlendMode, SkColorFilter, SkImageFilter,
+    //      and so on; or nullptr
+    void drawImage(sk_sp<SkImage> img, Scala left, Scala top, SkPaint* p = nullptr);
+
+    //png
+    void saveImage(const SkString& path);
+    sk_sp<SkImage> toImage();
+
 
 private:
-    _SkiaCanvas_ctx* m_ptr;
+    std::vector<unsigned int> m_buffer;
+    sk_sp<SkSurface> m_surface;
+    SkCanvas* m_canvas;
+    SkFont m_font;
+    SkPaint m_paint;
 };
 
 

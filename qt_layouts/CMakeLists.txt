@@ -30,7 +30,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
 ## handler os
-set(HANDLER_OS_DIR D:/study/cpp/ENV/handler_os)
+set(HANDLER_OS_DIR E:/study/cpp/ENV/handler_os)
 include_directories(${HANDLER_OS_DIR}/include)
 set(HANDLER_LIB ${HANDLER_OS_DIR}/lib/libhandler_os.a pthread)
 
@@ -45,7 +45,7 @@ message(STATUS "QT_LIBS: ${QT_LIBS}")
 
 ## skia
 
-set(SKIA_DIR D:/study/cpp/ENV/skia)
+set(SKIA_DIR E:/study/cpp/ENV/skia)
 set(SKIA_INC ${SKIA_DIR})
 find_library(LIB_SKIA skia expat gif jpeg-turbo png zlib HINTS "${SKIA_DIR}/lib")
 

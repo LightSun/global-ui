@@ -9,6 +9,8 @@ class QString;
 
 namespace h7_qt {
 
+using Scala = float;
+
 using uint8 = unsigned char;
 typedef bool boolean ;
 
@@ -55,6 +57,13 @@ struct Rect{
     }
     bool isPointIn(int x, int y)const{
         return x >= left && x <= right && y >= top && y <= bottom;
+    }
+    //10,10,100,100 ->(20,20) = 30,30,80,80
+    void insert(int x, int y){
+        left += x;
+        top += y;
+        right -=x;
+        bottom -=y;
     }
 };
 

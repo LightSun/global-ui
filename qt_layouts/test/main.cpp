@@ -16,7 +16,6 @@ extern int test_qt_view(int argc, char* argv[]);
 int main(int argc, char* argv[]){
     setbuf(stdout, NULL);
 
-
     return test_qt_view(argc, argv);
     //return test1(argc, argv);
 }

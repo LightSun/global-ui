@@ -40,7 +40,7 @@ void View::onSizeChanged(CSize s){
 void View::drawDirect(Canvas* c){
     //c->clipRect(Rect::ofXYWH(m_position.x, m_position.y, m_size.w, m_size.h));
     c->save();
-    c->setCompositionModeDst();
+    //c->setCompositionModeDst();
     int& offsetX = m_position.x;
     int& offsetY = m_position.y;
     c->translate(offsetX, offsetY);

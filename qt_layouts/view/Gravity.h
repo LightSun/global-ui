@@ -60,5 +60,11 @@ public:
         }
         return 0;
     }
+
+    static void center(Rect& in_out, int w, int h){
+        int xOffset = (in_out.width() - w)/2;
+        int yOffset = (in_out.height() - h)/2;
+        in_out.insert(xOffset, yOffset);
+    }
 };
 }
