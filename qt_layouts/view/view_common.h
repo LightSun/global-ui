@@ -2,6 +2,7 @@
 
 #include <functional>
 #include "core/h7_common.h"
+#include "include/core/SkRect.h"
 
 class QImage;
 class QColor;
@@ -64,6 +65,9 @@ struct Rect{
         top += y;
         right -=x;
         bottom -=y;
+    }
+    SkRect toSkRect()const{
+        return SkRect::MakeLTRB(left, top, right, bottom);
     }
 };
 

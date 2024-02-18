@@ -53,18 +53,31 @@ void SkiaCanvas::drawPath(const SkPath& path){
     m_canvas->drawPath(path, m_paint);
 }
 
-void SkiaCanvas::drawText(const SkString& text, CRect rect){
-    auto& r = (Rect&)rect;
+void SkiaCanvas::drawText(const SkString& text, const SkRect& rect){
+    auto& r = (SkRect&)rect;
     SkRect skr;
     auto w = m_font.measureText(text.c_str(), text.size(), SkTextEncoding::kUTF8, &skr);
     Gravity::center(r, w, skr.height());
-    m_canvas->drawString(text, r.left, r.top, m_font, m_paint);
+    m_canvas->drawString(text, r.left(), r.top(), m_font, m_paint);
 }
 void SkiaCanvas::drawText(const SkString& text, Scala x, Scala y){
     m_canvas->drawString(text, x, y, m_font, m_paint);
 }
 void SkiaCanvas::drawImage(sk_sp<SkImage> img, Scala x, Scala y, SkPaint* p){
     m_canvas->drawImage(img, x, y, p);
+}
+void SkiaCanvas::drawImage(CSkImagePtr img, Scala x, Scala y, SkPaint* p){
+    m_canvas->drawImage(img, x, y, p);
+}
+void SkiaCanvas::drawImageRect(CSkImagePtr img, const SkRect& src, const SkRect& dst,
+                   const SkPaint* paint, bool strict){
+    m_canvas->drawImageRect(img, src, dst, paint,
+                            strict ? SkCanvas::kStrict_SrcRectConstraint : SkCanvas::kFast_SrcRectConstraint);
+}
+void SkiaCanvas::drawImageRect(sk_sp<SkImage> img, const SkRect& src, const SkRect& dst,
+                   const SkPaint* paint, bool strict){
+    m_canvas->drawImageRect(img, src, dst, paint,
+                            strict ? SkCanvas::kStrict_SrcRectConstraint : SkCanvas::kFast_SrcRectConstraint);
 }
 void SkiaCanvas::saveImage(const SkString& path){
     auto img = m_surface->makeImageSnapshot();

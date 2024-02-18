@@ -20,7 +20,7 @@ enum {
 class Gravity{
 public:
 
-    static int computeXOffset(size_t total, size_t sub, int gravity){
+    static Scala computeXOffset(Scala total, Scala sub, int gravity){
         //PRINTLN("computeXOffset: total = %lu, sub = %lu", total, sub);
         switch (gravity & kGravity_HMASK) {
         case kGravity_LEFT:
@@ -38,13 +38,13 @@ public:
         return 0;
     }
     //sub: often include margin
-    static int computeXOffsetWithMargin(size_t total, size_t sub, CRect margin,int gravity){
+    static Scala computeXOffsetWithMargin(Scala total, Scala sub, CRect margin,int gravity){
         return computeXOffset(total, sub, gravity) + margin.left;
     }
-    static int computeYOffsetWithMargin(size_t total, size_t sub, CRect margin,int gravity){
+    static Scala computeYOffsetWithMargin(Scala total, Scala sub, CRect margin,int gravity){
         return computeYOffset(total, sub, gravity) + margin.top;
     }
-    static int computeYOffset(size_t total, size_t sub, int gravity){
+    static Scala computeYOffset(Scala total, Scala sub, int gravity){
         switch (gravity & kGravity_VMASK) {
         case kGravity_TOP:
             return 0;
@@ -61,10 +61,10 @@ public:
         return 0;
     }
 
-    static void center(Rect& in_out, int w, int h){
-        int xOffset = (in_out.width() - w)/2;
-        int yOffset = (in_out.height() - h)/2;
-        in_out.insert(xOffset, yOffset);
+    static void center(SkRect& in_out, Scala w, Scala h){
+        Scala xOffset = (in_out.width() - w)/2;
+        Scala yOffset = (in_out.height() - h)/2;
+        in_out.inset(xOffset, yOffset);
     }
 };
 }

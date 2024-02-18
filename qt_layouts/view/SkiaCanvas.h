@@ -8,6 +8,7 @@
 
 namespace h7_qt {
 
+using CSkImagePtr = const SkImage*;
 
 class SkiaCanvas
 {
@@ -27,6 +28,8 @@ public:
 
     void resetFont(){m_font = SkFont();}
     void resetPaint(){m_paint.reset();}
+    void setFont(const SkFont& f){m_font = f;}
+    void setPaint(const SkPaint& p){m_paint = p;}
     SkFont& getFont(){return m_font;}
     SkPaint& getPaint(){return m_paint;}
 
@@ -40,11 +43,17 @@ public:
     void drawRoundRect(const SkRect& rect, SkScalar rx, SkScalar ry);
     void drawPath(const SkPath& path);
     //with current paint and font
-    void drawText(const SkString& text, CRect rect);
+    void drawText(const SkString& text, const SkRect& rect);
     void drawText(const SkString& text, Scala left, Scala top);
     //SkPaint containing SkBlendMode, SkColorFilter, SkImageFilter,
     //      and so on; or nullptr
     void drawImage(sk_sp<SkImage> img, Scala left, Scala top, SkPaint* p = nullptr);
+    void drawImage(CSkImagePtr img, Scala left, Scala top, SkPaint* p = nullptr);
+
+    void drawImageRect(CSkImagePtr, const SkRect& src, const SkRect& dst,
+                       const SkPaint* paint, bool strict);
+    void drawImageRect(sk_sp<SkImage> img, const SkRect& src, const SkRect& dst,
+                       const SkPaint* paint, bool strict);
 
     //png
     void saveImage(const SkString& path);
