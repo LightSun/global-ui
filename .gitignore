@@ -83,3 +83,8 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+
+build-study_vulkan-Qt_5_14_2_gcc_64_1f8dfe-Debug/
+study_vulkan/external
+*.user
+
