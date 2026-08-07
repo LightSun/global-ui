@@ -51,7 +51,7 @@ TEST(AliasAnalysis, GlobalPtr_Same) {
 
 TEST(AliasAnalysis, GlobalPtr_DiffIndices) {
   auto snode = std::make_unique<SNode>(/*depth=*/1, /*t=*/SNodeType::place);
-
+    //取决于索引 indices1 和 indices2的指针是否指向同一个。
   IRBuilder builder;
   const auto indices1 = make_const_indices({1, 2, 3}, &builder);
   const auto indices2 = make_const_indices({1, 3, 2}, &builder);
@@ -81,7 +81,7 @@ TEST(AliasAnalysis, GlobalPtr_Uncertain) {
 TEST(AliasAnalysis, GlobalPtr_DiffSNodes) {
   auto snode1 = std::make_unique<SNode>(/*depth=*/1, /*t=*/SNodeType::place);
   auto snode2 = std::make_unique<SNode>(/*depth=*/1, /*t=*/SNodeType::place);
-
+    //snode 不一样，则一定不一样.
   IRBuilder builder;
   const auto indices = make_const_indices({1, 2, 3}, &builder);
   auto *gptr1 = builder.create_global_ptr(snode1.get(), indices);

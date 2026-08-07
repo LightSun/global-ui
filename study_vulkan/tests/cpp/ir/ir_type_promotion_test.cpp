@@ -7,6 +7,7 @@
 
 namespace taichi::lang {
 
+//类型提升
 TEST(IRTypePromotionTest, ShiftOp) {
   IRBuilder builder;
 
@@ -28,16 +29,18 @@ TEST(IRTypePromotionTest, ShiftOp) {
 
 TEST(IRPromotionTest, TensorType) {
   IRBuilder builder;
-
+   //int
   auto *lhs_element = builder.get_int32(1);
   auto *lhs_mat = builder.create_matrix_init({lhs_element});
   lhs_mat->ret_type =
       TypeFactory::create_tensor_type({1, 1}, PrimitiveType::i32);
+  //f32
   auto *rhs_element = builder.get_float32(1);
   auto *rhs_mat = builder.create_matrix_init({rhs_element});
   rhs_mat->ret_type =
       TypeFactory::create_tensor_type({1, 1}, PrimitiveType::f32);
   builder.create_add(lhs_mat, rhs_mat);
+  //
   auto ir = builder.extract_ir();
   auto config = CompileConfig();
   auto *block = ir->as<Block>();

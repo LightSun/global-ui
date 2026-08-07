@@ -42,9 +42,9 @@ struct CompileConfig {
   bool force_scalarize_matrix;
   bool half2_vectorization;
   bool make_cpu_multithreading_loop;
-  DataType default_fp;
-  DataType default_ip;
-  DataType default_up;
+  DataType default_fp; //default data-type of float
+  DataType default_ip; //default data-type of int-style
+  DataType default_up; //default data-type of uint-style
   std::string extra_flags;
   int default_cpu_block_dim;
   bool cpu_block_dim_adaptive;

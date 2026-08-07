@@ -41,6 +41,7 @@ TEST(FrontendTypeInference, Id) {
 
 TEST(FrontendTypeInference, BinaryOp) {
   default_compile_config.default_fp = PrimitiveType::f64;
+  //
   auto prog = std::make_unique<Program>(Arch::x64);
   auto const_i32 = value<int32>(-(1 << 20));
   const_i32->type_check(nullptr);
@@ -69,7 +70,7 @@ TEST(FrontendTypeInference, UnaryOp) {
   log_f64->type_check(&prog->compile_config());
   EXPECT_EQ(log_f64->ret_type, PrimitiveType::f64);
 }
-
+//三元运算
 TEST(FrontendTypeInference, TernaryOp) {
   auto const_u1 = value<uint1>(true);
   const_u1->type_check(nullptr);
@@ -86,6 +87,7 @@ TEST(FrontendTypeInference, TernaryOp) {
   auto const_f32 = value<float32>(5.0);
   const_f32->type_check(nullptr);
   EXPECT_EQ(const_f32->ret_type, PrimitiveType::f32);
+  //like if else
   auto ternary_f32 = expr_select(const_u1, cast_i8, const_f32);
   ternary_f32->type_check(nullptr);
   EXPECT_EQ(ternary_f32->ret_type, PrimitiveType::f32);
@@ -135,12 +137,14 @@ TEST(FrontendTypeInference, GlobalPtr_Field) {
   auto global_var =
       Expr::make<FieldExpression>(PrimitiveType::u8, Identifier(0));
   SNode snode;
-  snode.num_active_indices = 1;
+  snode.num_active_indices = 1; //一维数组
   std::dynamic_pointer_cast<FieldExpression>(global_var.expr)
-      ->set_snode(&snode);
+      ->set_snode(&snode); //bind
 
   auto index = value<int32>(2);
   index->type_check(nullptr);
+  //下标表达式，即 global_var[2]。 GlobalPtrExpression
+  //计算字段元素的地址
   auto global_ptr = ast_builder->expr_subscript(global_var, ExprGroup(index));
   global_ptr->type_check(nullptr);
   EXPECT_EQ(global_ptr->ret_type,
@@ -156,6 +160,7 @@ TEST(FrontendTypeInference, GlobalPtr_ExternalTensor) {
 
   auto index = value<float32>(2);
   index->type_check(nullptr);
+  //DataType,ndim,arg_id,needs_grad
   auto external_tensor = Expr::make<ExternalTensorExpression>(
       PrimitiveType::u16, 1, std::vector<int>{0}, 0);
   auto global_ptr =
@@ -168,12 +173,14 @@ TEST(FrontendTypeInference, TensorElement) {
   auto func = []() {};
   auto kernel = std::make_unique<Kernel>(*prog, func, "fake_kernel");
   auto *ast_builder = &kernel->context->builder();
+  //
   const std::vector<int> shape{3};
   auto var = Expr(std::make_shared<IdExpression>(ast_builder->get_next_id()));
   ast_builder->insert(std::make_unique<FrontendAllocaStmt>(
       std::static_pointer_cast<IdExpression>(var.expr)->id, shape,
       PrimitiveType::u32));
   var->ret_type = ast_builder->get_last_stmt()->ret_type;
+  //
   auto index = value<int32>(2);
   index->type_check(nullptr);
   auto tensor_element = Expr::make<IndexExpression>(var, ExprGroup(index));
@@ -188,20 +195,28 @@ TEST(FrontendTypeInference, AtomicOp) {
   const_i32->type_check(nullptr);
   auto const_f32 = value<float32>(5.0);
   const_f32->type_check(nullptr);
+  //原子操作结果只有整数？
   auto atomic_add_i32 =
       Expr::make<AtomicOpExpression>(AtomicOpType::add, const_i32, const_f32);
   atomic_add_i32->type_check(nullptr);
   EXPECT_EQ(atomic_add_i32->ret_type, PrimitiveType::i32);
 }
 
+/*
+调用 snode_get_addr 获取一个 SNode 树中某个元素的地址时，
+返回的类型是否为 u64（64位无符号整数，即指针的底层表示）
+获取 SNode 树中元素的原始地址
+*/
 TEST(FrontendTypeInference, SNodeOp) {
   auto prog = std::make_unique<Program>(Arch::x64);
   auto func = []() {};
   auto kernel = std::make_unique<Kernel>(*prog, func, "fake_kernel");
+  //
   auto snode = std::make_unique<SNode>(0, SNodeType::root);
   snode->dt = PrimitiveType::u8;
   auto index = value<int32>(2);
   index->type_check(nullptr);
+  //生成一个 获取 SNode 元素地址 的前端表达式。它表示取 snode 中索引为 2 的元素的内存地址
   auto snode_op =
       kernel->context->builder().snode_get_addr(snode.get(), ExprGroup(index));
   snode_op->type_check(nullptr);
@@ -209,6 +224,7 @@ TEST(FrontendTypeInference, SNodeOp) {
 }
 
 TEST(FrontendTypeInference, ExternalTensorShapeAlongAxis) {
+    //DataType,ndim,arg_id,needs_grad
   auto external_tensor = Expr::make<ExternalTensorExpression>(
       PrimitiveType::u64, 1, std::vector<int>{0}, 0);
   auto shape =
@@ -217,14 +233,17 @@ TEST(FrontendTypeInference, ExternalTensorShapeAlongAxis) {
   EXPECT_EQ(shape->ret_type, PrimitiveType::i32);
 }
 
+//值域假设 / 范围假定，编译器数据流分析（VRA Value‑Range‑Analysis）概念，自定义 AST/MLIR 方言中常见节点名。
 TEST(FrontendTypeInference, RangeAssumption) {
   auto const_f32_a = value<float32>(5.0);
   const_f32_a->type_check(nullptr);
   auto const_f32_b = value<float32>(5.0);
   const_f32_b->type_check(nullptr);
+  //
   auto valid = assume_range(const_f32_a, const_f32_b, 0, 1);
   valid->type_check(nullptr);
   EXPECT_EQ(valid->ret_type, PrimitiveType::f32);
+  //assume_range: 数据类型必须一致，否则 TaichiTypeError
   auto const_f64 = value<float64>(5.0);
   const_f64->type_check(nullptr);
   auto invalid = assume_range(const_f32_a, const_f64, 0, 1);
@@ -253,10 +272,12 @@ TEST(FrontendTypeInference, TensorTypeUnification) {
   std::vector<int> shape = {2, 1};
   auto mat = Expr::make<MatrixExpression>(elements, shape, PrimitiveType::i32);
   mat->type_check(nullptr);
+  //
   auto const_val = Expr::make<ConstExpression, int32>(2);
   const_val->type_check(nullptr);
   auto expr = Expr::make<BinaryOpExpression>(BinaryOpType::add, mat, const_val);
   expr->type_check(nullptr);
+  //const_val -> shape自动转化为跟mat一致。
   auto binaryop_expr = expr.cast<BinaryOpExpression>();
   EXPECT_TRUE(binaryop_expr->rhs->ret_type->is<TensorType>());
   auto rhs_type = binaryop_expr->rhs->ret_type->cast<TensorType>();

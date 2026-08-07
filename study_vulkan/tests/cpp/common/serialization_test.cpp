@@ -125,7 +125,7 @@ TEST(Serialization, Basic) {
 struct MoveOnlyObj {
   int foo{0};
   std::string bar;
-  std::unique_ptr<int> ptr{nullptr};
+  std::unique_ptr<int> ptr ;
 
   TI_IO_DEF(foo, bar);
 };
@@ -181,6 +181,7 @@ TEST(SERIALIZATION, Type) {
       TypeFactory::get_instance().get_quant_int_type(5, false, int32_type);
   auto *quant_int7_type =
       TypeFactory::get_instance().get_quant_int_type(7, false, int32_type);
+  //
   auto *quant_float11_type = TypeFactory::get_instance().get_quant_float_type(
       quant_int5_type, quant_int6_type, float32_type);
   auto *quant_fixed_type = TypeFactory::get_instance().get_quant_fixed_type(

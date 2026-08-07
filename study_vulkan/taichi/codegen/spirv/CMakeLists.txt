@@ -22,7 +22,6 @@ target_include_directories(spirv_codegen
     ${PROJECT_SOURCE_DIR}/external/FP16/include
     ${LLVM_INCLUDE_DIRS}
   )
-
 target_link_libraries(spirv_codegen PRIVATE taichi_util)
 # NOTE: SPIRV-Tools-opt must come before SPIRV-Tools
 # https://github.com/KhronosGroup/SPIRV-Tools/issues/1569#issuecomment-390250792

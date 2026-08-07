@@ -52,9 +52,12 @@ std::atomic<int> Program::num_instances_;
 
 Program::Program(Arch desired_arch) : snode_rw_accessors_bank_(this) {
   TI_TRACE("Program initializing...");
-
+/*
+背景：QuantFloatType运算速度很慢。开启 FTZ 后硬件把极小数值直接置零，提升速度；
+但对于量化浮点类型，该行为会影响运算结果正确性，因此这里是强制统一开启，保证各后端行为一致。
+  */
   // For performance considerations and correctness of QuantFloatType
-  // operations, we force floating-point operations to flush to zero on all
+  // operations, we force floating-point operations to 'flush to zero' on all
   // backends (including CPUs).
 #if defined(_M_X64) || defined(__x86_64)
   _MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON);
@@ -63,9 +66,10 @@ Program::Program(Arch desired_arch) : snode_rw_accessors_bank_(this) {
   // Enforce flush to zero on arm64 CPUs
   // https://developer.arm.com/documentation/100403/0201/register-descriptions/advanced-simd-and-floating-point-registers/aarch64-register-descriptions/fpcr--floating-point-control-register?lang=en
   std::uint64_t fpcr;
+  __asm__ __volatile__(""); //编译器的内存屏障 (Compiler Barrier), 指令不重排
+  __asm__ __volatile__("MRS %0, FPCR" : "=r"(fpcr)); //load FPCR to fpcr
   __asm__ __volatile__("");
-  __asm__ __volatile__("MRS %0, FPCR" : "=r"(fpcr));
-  __asm__ __volatile__("");
+  //store fpcr
   __asm__ __volatile__("MSR FPCR, %0"
                        :
                        : "ri"(fpcr | (1 << 24)));  // Bit 24 is FZ

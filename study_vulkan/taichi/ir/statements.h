@@ -173,6 +173,11 @@ class UnaryOpStmt : public Stmt {
   TI_DEFINE_ACCEPT_AND_CLONE
 };
 
+/* 加载一个内核参数。构造该语句时必须明确其数据类型。
+        * 当且仅当本语句的结果可以用作 ExternalPtrStmt 的基指针时，|is_ptr| 应当为 true。
+        * |arg_depth| 表示该值在参数包（argpack）中的嵌套层级深度。
+        * |argpack_ptr| 保存参数包的缓冲区，仅在 |arg_depth| > 0 时有效。
+*/
 /**
  * Load a kernel argument. The data type should be known when constructing this
  * statement. |is_ptr| should be true iff the result can be used as a base
@@ -253,7 +258,7 @@ class RandStmt : public Stmt {
 };
 
 /**
- * A binary operation.
+ * A binary operation. 二元运算
  */
 class BinaryOpStmt : public Stmt {
  public:

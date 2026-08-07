@@ -17,7 +17,7 @@ TEST(SNodeTree, GetSNodeToRootMapping) {
     all_snode_ids.push_back(dense_snode.id);
     all_snode_ids.push_back(leaf_snode.id);
   }
-
+    //k,v=nod_id,root_id
   auto map = get_snodes_to_root_id(root);
   EXPECT_EQ(map.size(), 1 + 3 * 3);
   for (int id : all_snode_ids) {

@@ -60,6 +60,21 @@ TEST(IRBuilder, RangeFor) {
   EXPECT_EQ(loopc->body->statements[0].get(), index);
 }
 
+/*
+// 伪代码：表示由 IRBuilder 构建出的最终 IR 结构
+
+int zero = 0;            // 常量 0
+int ten = 10;            // 常量 10
+int two = 2;             // 插入在循环之前（zero 之后）
+
+// 唯一的 for 循环：对应 range-for（i 从 zero 到 ten）
+for (int i = zero; i < ten; i++) {
+    int one = 1;         // 循环体第一条语句
+    int sum = one + two; // 循环体第二条语句（在 one 之后）
+}
+
+print(two);              // 循环之后的 print 语句
+*/
 TEST(IRBuilder, LoopGuard) {
   IRBuilder builder;
   auto *zero = builder.get_int32(0);
@@ -68,11 +83,13 @@ TEST(IRBuilder, LoopGuard) {
   Stmt *two;
   Stmt *one;
   Stmt *sum;
-  {
-    auto _ = builder.get_loop_guard(loop);
+  { // 进入循环体插入点（设置当前插入点为循环体开始）
+    auto _ = builder.get_loop_guard(loop); // RAII，析构时恢复插入点
     one = builder.get_int32(1);
+    // 将插入点设置到循环之前（在循环前面插入语句）
     builder.set_insertion_point_to_before(loop);
     two = builder.get_int32(2);
+     // 将插入点设置到 one 之后（即在循环体内 one 之后插入）
     builder.set_insertion_point_to_after(one);
     sum = builder.create_add(one, two);
   }
@@ -109,8 +126,10 @@ TEST(IRBuilder, ExternalPtr) {
   auto *a2 = builder.create_global_load(a2ptr);
   auto *a0plusa2 = builder.create_add(a0, a2);
   builder.create_global_store(a2ptr, a0plusa2);  // a[2] = a[0] + a[2]
+  //
   auto block = builder.extract_ir();
   auto ker = std::make_unique<Kernel>(*test_prog.prog(), std::move(block));
+  //和 create_ndarray_arg_load 对应
   ker->insert_ndarray_param(get_data_type<int>(), /*total_dim=*/1);
   ker->finalize_params();
   auto launch_ctx = ker->make_launch_context();
@@ -180,9 +199,11 @@ TEST(IRBuilder, AtomicOp) {
   auto *a0ptr = builder.create_external_ptr(arg, {zero});
   builder.create_atomic_add(a0ptr, one);  // a[0] += 1
   auto block = builder.extract_ir();
+  //
   auto ker = std::make_unique<Kernel>(*test_prog.prog(), std::move(block));
   ker->insert_ndarray_param(get_data_type<int>(), /*total_dim=*/1);
   ker->finalize_params();
+  //
   auto launch_ctx = ker->make_launch_context();
   launch_ctx.set_arg_external_array_with_shape(
       /*arg_id=*/{0}, (uint64)array.get(), size, {size});

@@ -4,6 +4,12 @@
 
 namespace taichi::lang {
 
+/*
+get_quant_float_type 函数解释:
+    digits_type：表示尾数（mantissa） 的位数或类型（通常是一个整数类型，如 i4、i8 等）。
+    exponent_type：表示指数（exponent） 的位数或类型（通常也是整数类型）。
+    compute_type：在进行算术运算时，该量化浮点数会提升到的计算类型（例如 f32 或 f64），保证精度和避免溢出
+ */
 TEST(Type, TypeToString) {
   auto f16 = TypeFactory::get_instance().get_primitive_real_type(16);
   EXPECT_EQ(f16->to_string(), "f16");
@@ -22,6 +28,7 @@ TEST(Type, TypeToString) {
       /*member_exponent_users=*/{{}, {}});
   EXPECT_EQ(bs1->to_string(), "bs(0: qi5@0, 1: qu7@5)");
 
+  //member_exponents: 指数, 0 表示独立指数0位 ???， member_exponent_users 指数共享？
   auto bs2 = TypeFactory::get_instance().get_bit_struct_type(
       /*physical_type=*/u32, /*member_types=*/{qu7, qfl, qu7, qfl},
       /*member_bit_offsets=*/{0, 7, 12, 19},
@@ -33,7 +40,8 @@ TEST(Type, TypeToString) {
 
   auto bs3 = TypeFactory::get_instance().get_bit_struct_type(
       /*physical_type=*/u32, /*member_types=*/{qu7, qfl, qfl},
-      /*member_bit_offsets=*/{0, 7, 12}, /*member_exponents=*/{-1, 0, 0},
+      /*member_bit_offsets=*/{0, 7, 12},
+       /*member_exponents=*/{-1, 0, 0},
       /*member_exponent_users=*/{{1, 2}, {}, {}});
   EXPECT_EQ(bs3->to_string(),
             "bs(0: qu7@0, 1: qfl(d=qi5 e=qu7 c=f32)@7 shared_exp=0, 2: "

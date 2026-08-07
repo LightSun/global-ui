@@ -24,3 +24,6 @@ target_include_directories(taichi_util
   )
 
 target_link_libraries(taichi_util PUBLIC taichi_common)
+if(H7_SIMPLE_TEST)
+    target_compile_definitions(taichi_util PRIVATE H7_SIMPLE_TEST)
+endif(H7_SIMPLE_TEST)

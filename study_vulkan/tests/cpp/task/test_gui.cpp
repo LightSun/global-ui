@@ -1,11 +1,13 @@
 // Note: this is not really a test case.
 
-#include "taichi/gui/gui.h"
+#include "taichi/ui/gui/gui.h"
 #include "taichi/common/task.h"
+#include "gtest/gtest.h"
 
 namespace taichi {
 
 auto test_gui = []() {
+    printf("test_gui >> start...\n");
   // GUI gui("GUI Test", 1000, 400, false);
   GUI gui("GUI Test", 1000, 400, true, false, 0, false, false);
   auto canvas = *gui.canvas;
@@ -46,5 +48,13 @@ auto test_gui = []() {
 };
 
 TI_REGISTER_TASK(test_gui);
+
+void main_test_gui(){
+    test_gui();
+}
+//TEST(Task_test_gui, test_gui1) {
+//    Task_test_gui task;
+//    task.test();
+//}
 
 }  // namespace taichi

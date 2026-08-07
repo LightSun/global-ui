@@ -263,10 +263,12 @@ class LlvmProgramImpl : public ProgramImpl {
     // "LlvmRuntimeExecutor::TaichiLLVMContext::ThreadSafeContext"
 
     // 1. Destructs cache_data_
-    cache_data_.reset();
+    //cache_data_.reset();
+    cache_data_ = nullptr;
 
     // 2. Destructs runtime_exec_
-    runtime_exec_.reset();
+    //runtime_exec_.reset();
+    runtime_exec_ = nullptr;
   }
   ParallelExecutor compilation_workers;  // parallel compilation
 
